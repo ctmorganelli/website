@@ -684,12 +684,12 @@
     .board-logo-panel a { display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
     /* Board CTA */
     .board-cta {
-      display:flex; align-items:center; gap:2rem;
-      padding:1.4rem 2rem;
+      display:flex; flex-direction:column; align-items:flex-start; gap:1.25rem;
+      padding:1.6rem 2rem;
       background:var(--white); border:1px solid var(--border);
       margin-bottom:2rem;
     }
-    .board-cta-text { font-size:0.82rem; color:var(--mid); line-height:1.72; flex:1; margin:0; }
+    .board-cta-text { font-size:0.82rem; color:var(--mid); line-height:1.72; margin:0; }
     .board-cta-btn {
       display:inline-flex; align-items:center; gap:0.55rem;
       font-size:0.57rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
@@ -968,25 +968,30 @@
       nav { padding:0.85rem 1.25rem; }
       .nav-toggle { display:flex; }
       .nav-links {
-        position:fixed; inset:0; z-index:198;
-        background:rgba(10,10,10,0.97);
+        position:fixed; inset:0; z-index:300;
+        background:#0a0a0a;
         flex-direction:column; align-items:center; justify-content:center;
-        gap:2.5rem; padding:2rem;
+        gap:2.75rem; padding:2rem;
         transform:translateX(100%);
         transition:transform 0.35s cubic-bezier(.4,0,.2,1);
         display:flex !important;
         list-style:none;
+        margin:0;
       }
       .nav-links.open { transform:translateX(0); }
+      .nav-links li { list-style:none; }
       .nav-links a {
-        font-size:1rem; letter-spacing:0.18em;
-        color:rgba(255,255,255,0.7);
+        font-size:1.05rem; letter-spacing:0.18em;
+        color:rgba(255,255,255,0.75); text-decoration:none;
+        font-weight:600; text-transform:uppercase;
       }
       .nav-links a:hover { color:#fff; }
       .nav-cta {
         padding:0.75rem 2rem !important;
         font-size:0.78rem !important;
         letter-spacing:0.18em !important;
+        background:var(--gold) !important;
+        color:var(--charcoal) !important;
       }
 
       /* Sections */
@@ -995,9 +1000,11 @@
 
       /* Hero */
       .hero-left { padding:5.5rem 1.25rem 3rem; }
-      .hero-right { height:55vw; min-height:260px; }
+      .hero-right { height:75vw; min-height:320px; }
+      .hero-right img { object-position:center 10%; }
       .hero h1 { font-size:clamp(2.4rem,9vw,3.2rem); margin-bottom:1.25rem; }
       .hero-sub { font-size:0.88rem; max-width:100%; }
+      .hero-eyebrow { white-space:nowrap; font-size:0.58rem; letter-spacing:0.22em; }
       .hero-sectors { gap:0.4rem; }
       .hero-sector { padding:0.4rem 0.7rem; }
       .hero-cta { gap:0.75rem; }
@@ -1422,8 +1429,7 @@
 
           <!-- Left: alignment panel -->
           <div class="ins-alignment">
-            <p class="ins-alignment-eyebrow">Responsible Alignment</p>
-            <p class="ins-alignment-name">Seltzer Group Partners</p>
+            <p class="ins-alignment-eyebrow">Responsible Alignment With</p>
             <img src="Companies/Seltzer Group Partners/Seltzer_Group_YG_RGB_1080pxW.png" alt="Seltzer Group Partners" />
           </div>
 

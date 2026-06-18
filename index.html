@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chris Morganelli</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;800;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F0F0F0;
+      --white: #ffffff;
+      --charcoal: #111111;
+      --charcoal2: #1e1e1e;
+      --mid: #555555;
+      --muted: #9a9a9a;
+      --border: #DEDEDE;
+      --gold: #1A7A6E;
+      --gold-light: #3DA898;
+      --gold-pale: #E6F5F3;
+      --navy: #1a2f5e;
+      --mcit-blue: #1B5FA8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--charcoal);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Global grain */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      pointer-events: none;
+      z-index: 999;
+      mix-blend-mode: overlay;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal { opacity:0; transform:translateY(36px); transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1); }
+    .reveal.visible { opacity:1; transform:none; }
+    .reveal-left { opacity:0; transform:translateX(-44px); transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1); }
+    .reveal-left.visible { opacity:1; transform:none; }
+    .reveal-right { opacity:0; transform:translateX(44px); transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1); }
+    .reveal-right.visible { opacity:1; transform:none; }
+    .stagger > * { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
+    .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s; }
+    .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s; }
+    .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
+    .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.35s; }
+    .stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:.45s; }
+    .stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:.55s; }
+    .stagger.visible > *:nth-child(7) { opacity:1; transform:none; transition-delay:.65s; }
+    .stagger.visible > *:nth-child(8) { opacity:1; transform:none; transition-delay:.70s; }
+    .stagger.visible > *:nth-child(9) { opacity:1; transform:none; transition-delay:.75s; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:200;
+      display: flex; justify-content:space-between; align-items:center;
+      padding: 0.85rem 5rem;
+      background: rgba(17,17,17,0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(26,122,110,0.12);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,0.4); }
+    .nav-logo img {
+      height: 46px; width:auto; display:block;
+      filter: brightness(0) invert(1);
+      animation: logoReveal 1.1s cubic-bezier(.4,0,.2,1) 0.15s both;
+    }
+    @keyframes logoReveal {
+      0%   { clip-path:inset(0 100% 0 0); opacity:0; }
+      12%  { opacity:1; }
+      100% { clip-path:inset(0 0% 0 0); opacity:1; }
+    }
+    .nav-links { display:flex; gap:3.25rem; list-style:none; align-items:center; }
+    .nav-links a {
+      color: rgba(255,255,255,0.5);
+      text-decoration:none; font-size:0.7rem; font-weight:600;
+      letter-spacing:0.16em; text-transform:uppercase;
+      transition:color 0.2s; position:relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-4px; left:0; right:0;
+      height:1.5px; background:var(--gold);
+      transform:scaleX(0); transition:transform 0.25s; transform-origin:left;
+    }
+    .nav-links a:hover { color:#fff; }
+    .nav-links a:hover::after { transform:scaleX(1); }
+    .nav-cta {
+      background:var(--gold) !important; color:var(--charcoal) !important;
+      padding:0.55rem 1.4rem; border-radius:2px;
+      letter-spacing:0.14em !important; font-weight:700 !important;
+      transition:background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta::after { display:none !important; }
+    .nav-cta:hover { background:var(--gold-light) !important; transform:translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero { min-height:62vh; display:grid; grid-template-columns:55% 45%; padding-top:72px; overflow:hidden; }
+    .hero-left {
+      display:flex; flex-direction:column; justify-content:center;
+      padding:2rem 5rem 2.5rem; background:var(--charcoal);
+      position:relative; overflow:hidden;
+    }
+    .hero-left::after {
+      content:'CM'; position:absolute; bottom:-2rem; right:-3rem;
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(14rem,20vw,22rem); font-weight:700;
+      color:transparent; -webkit-text-stroke:2px rgba(26,122,110,0.22);
+      line-height:1; pointer-events:none; user-select:none; z-index:0; letter-spacing:-0.04em;
+    }
+    .hero-left::before {
+      content:''; position:absolute; bottom:-60px; left:-60px;
+      width:400px; height:400px;
+      background-image:radial-gradient(circle, var(--gold) 1.2px, transparent 1.2px);
+      background-size:24px 24px; opacity:0.28; pointer-events:none; z-index:0;
+    }
+    .hero-dots-tr {
+      position:absolute; top:2rem; right:2rem;
+      width:220px; height:220px;
+      background-image:radial-gradient(circle, var(--gold) 1px, transparent 1px);
+      background-size:18px 18px; opacity:0.2; pointer-events:none; z-index:0;
+    }
+    .hero-arc {
+      position:absolute; width:560px; height:560px; border-radius:50%;
+      border:1px solid rgba(26,122,110,0.2);
+      top:50%; left:50%; transform:translate(-40%,-50%);
+      pointer-events:none; z-index:0;
+    }
+    .hero-arc-2 { width:380px; height:380px; border-color:rgba(26,122,110,0.13); transform:translate(-30%,-50%); }
+    .hero-gold-bar {
+      position:absolute; top:0; left:0; width:100%; height:3px;
+      background:linear-gradient(to right, var(--gold), transparent 60%); z-index:1;
+    }
+    .hero-eyebrow, .hero h1, .hero-sub, .hero-sectors, .hero-cta, .hero-stats { position:relative; z-index:1; }
+
+    .hero-eyebrow {
+      display:flex; align-items:center; gap:0.85rem;
+      font-size:0.66rem; font-weight:700; letter-spacing:0.35em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:1.5rem; opacity:0; animation:fadeUp 0.8s 0.2s forwards;
+    }
+    .hero-eyebrow::before { content:''; display:block; width:32px; height:1.5px; background:var(--gold); flex-shrink:0; }
+    .hero h1 {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(3.4rem,5.5vw,5.8rem); font-weight:900;
+      line-height:1.0; color:#fff; margin-bottom:1.75rem;
+      letter-spacing:-0.01em;
+      opacity:0; animation:fadeUp 0.8s 0.35s forwards;
+    }
+    .hero h1 em { font-style:normal; color:var(--gold-light); font-weight:800; }
+    .hero h1 .line-accent { display:inline-block; position:relative; }
+    .hero h1 .line-accent::after {
+      content:''; position:absolute; bottom:4px; left:0; right:0;
+      height:3px; background:var(--gold); opacity:0.5;
+    }
+    .hero-sub {
+      font-size:1rem; color:rgba(255,255,255,0.5);
+      max-width:440px; line-height:1.9; margin-bottom:2rem;
+      opacity:0; animation:fadeUp 0.8s 0.5s forwards;
+    }
+
+    /* ── HERO SECTOR CHIPS ── */
+    .hero-sectors {
+      display:flex; gap:0.6rem; flex-wrap:wrap;
+      margin-bottom:2.5rem; opacity:0; animation:fadeUp 0.8s 0.6s forwards;
+    }
+    .hero-sector {
+      display:flex; align-items:center; gap:0.55rem;
+      padding:0.45rem 0.85rem;
+      border:1px solid rgba(26,122,110,0.22); border-radius:2px;
+      text-decoration:none; transition:all 0.22s; cursor:pointer;
+    }
+    .hero-sector:hover { border-color:var(--gold); background:rgba(26,122,110,0.06); transform:translateY(-1px); }
+    .sector-num {
+      font-family:'Raleway',sans-serif; font-size:0.68rem;
+      font-weight:800; color:var(--gold); opacity:0.8; line-height:1; letter-spacing:0.04em;
+    }
+    .sector-name {
+      font-size:0.6rem; font-weight:700;
+      letter-spacing:0.2em; text-transform:uppercase;
+      color:rgba(255,255,255,0.45);
+      transition:color 0.22s;
+    }
+    .hero-sector:hover .sector-name { color:rgba(255,255,255,0.85); }
+
+    .hero-cta { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.8s 0.75s forwards; }
+    .btn {
+      display:inline-block; padding:0.95rem 2.25rem;
+      font-size:0.72rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+      text-decoration:none; border-radius:2px; transition:all 0.22s; cursor:pointer; border:none;
+    }
+    .btn-gold { background:var(--gold); color:var(--charcoal); }
+    .btn-gold:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 8px 24px rgba(26,122,110,0.3); }
+    .btn-outline-hero { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.25); }
+    .btn-outline-hero:hover { border-color:rgba(255,255,255,0.7); transform:translateY(-2px); }
+    .btn-dark { background:var(--charcoal); color:#fff; }
+    .btn-dark:hover { background:var(--charcoal2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+    .btn-outline { background:transparent; color:var(--charcoal); border:1.5px solid var(--charcoal); }
+    .btn-outline:hover { background:var(--charcoal); color:#fff; transform:translateY(-2px); }
+
+
+    .hero-right { position:relative; background:#0a0a0a; overflow:hidden; }
+    .hero-right img {
+      width:100%; height:100%; object-fit:cover; object-position:top center;
+      display:block; mix-blend-mode:luminosity; opacity:0.75;
+      animation:heroImgScale 1.2s 0.1s both;
+    }
+    .hero-right-overlay { position:absolute; inset:0; background:linear-gradient(to right,rgba(17,17,17,0.6) 0%,rgba(17,17,17,0.05) 60%); }
+    .hero-tag {
+      position:absolute; bottom:2.5rem; left:2rem;
+      font-size:0.64rem; font-weight:700; letter-spacing:0.28em; text-transform:uppercase;
+      color:rgba(255,255,255,0.35); writing-mode:vertical-rl; transform:rotate(180deg);
+    }
+    .hero-border-accent {
+      position:absolute; top:2rem; right:2rem; width:56px; height:56px;
+      border-top:2px solid var(--gold); border-right:2px solid var(--gold); opacity:0.55;
+    }
+    .hero-circle { position:absolute; border-radius:50%; pointer-events:none; }
+    .hero-circle-1 { width:320px; height:320px; border:1.5px solid rgba(26,122,110,0.28); bottom:-60px; right:-60px; animation:floatCircle 9s ease-in-out infinite; }
+    .hero-circle-2 { width:180px; height:180px; border:1.5px solid rgba(26,122,110,0.35); top:15%; left:10%; animation:floatCircle 12s ease-in-out 3s infinite reverse; }
+    .hero-circle-3 { width:60px; height:60px; background:rgba(26,122,110,0.18); top:40%; right:15%; animation:floatCircle 7s ease-in-out 1.5s infinite; }
+
+    @keyframes floatCircle { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-18px);} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;} }
+    @keyframes heroImgScale { from{transform:scale(1.06);}to{transform:none;} }
+
+    /* ── SECTION BASICS ── */
+    section { padding:7rem 5rem; }
+    .label { font-size:0.64rem; font-weight:700; letter-spacing:0.36em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+    .label::before { content:''; display:block; width:24px; height:2px; background:var(--gold); flex-shrink:0; }
+    .section-title { font-family:'Raleway',sans-serif; font-size:clamp(2.4rem,4.5vw,3.8rem); font-weight:900; line-height:1.0; letter-spacing:-0.01em; color:var(--charcoal); margin-bottom:1rem; }
+    .rule { width:60px; height:3px; background:var(--gold); margin-bottom:2.75rem; border-radius:2px; }
+
+    /* ── ABOUT ── */
+    #about {
+      background-color:#F8F8F8;
+      position:relative; overflow:hidden;
+    }
+    #about::before { content:none; }
+    #about::after { content:none; }
+    .about-layout { display:grid; grid-template-columns:290px 1fr; gap:6rem; align-items:start; max-width:1100px; position:relative; z-index:1; }
+    .about-photo-wrap { position:relative; margin-bottom:2.25rem; }
+    .about-photo { width:100%; aspect-ratio:3/4; object-fit:cover; object-position:top; display:block; }
+    .about-photo-wrap::before { content:''; position:absolute; top:-10px; left:-10px; width:50%; height:50%; border-top:2px solid var(--gold); border-left:2px solid var(--gold); pointer-events:none; opacity:0.5; }
+    .about-photo-wrap::after { content:''; position:absolute; bottom:-12px; right:-12px; width:50%; height:50%; border-right:2.5px solid var(--gold); border-bottom:2.5px solid var(--gold); pointer-events:none; opacity:0.7; }
+    .pillars { display:flex; flex-direction:column; gap:0.5rem; }
+    .pillar { padding:1rem 1.1rem; border-left:3px solid transparent; background:rgba(245,244,241,0.9); transition:border-color 0.25s,background 0.25s,transform 0.25s; cursor:default; }
+    .pillar:hover { border-left-color:var(--gold); background:var(--gold-pale); transform:translateX(5px); }
+    .pillar-title { font-size:0.68rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--charcoal); margin-bottom:0.2rem; }
+    .pillar-text { font-size:0.82rem; color:var(--muted); }
+    .about-content p { font-size:1.05rem; line-height:2; color:#3d3d3d; margin-bottom:1.6rem; }
+    .about-content p:last-child { margin-bottom:0; }
+    .about-content .bold-open { font-family:'Raleway',sans-serif; font-size:1.1rem; font-weight:700; color:var(--charcoal); line-height:1.8; border-left:3px solid var(--gold); padding-left:1.25rem; }
+
+    /* ── ICONS (shared) ── */
+    .pillar-icon { margin-bottom:0.5rem; }
+    .pillar-icon svg { width:18px; height:18px; stroke:var(--gold); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; opacity:0.8; display:block; }
+.sector-chip-icon { display:flex; align-items:center; }
+    .sector-chip-icon svg { width:11px; height:11px; stroke:var(--gold); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; opacity:0.6; display:block; }
+    .footer-social { display:flex; align-items:center; gap:1rem; margin-top:0.4rem; }
+    .footer-social a { opacity:0.45; transition:opacity 0.2s; display:flex; align-items:center; }
+    .footer-social a:hover { opacity:0.85; }
+    .footer-social svg { width:16px; height:16px; stroke:#fff; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; display:block; }
+
+
+    /* ── SERVICES MCIT HERO ── */
+    #services {
+      background:var(--white);
+      position:relative; overflow:hidden;
+    }
+    #services::before {
+      content:''; position:absolute; top:0; right:0; width:320px; height:320px;
+      background-image:radial-gradient(circle,rgba(26,122,110,0.18) 1.2px,transparent 1.2px);
+      background-size:20px 20px; opacity:1; pointer-events:none;
+    }
+    .mcit-hero {
+      position:relative; overflow:hidden;
+      background:var(--charcoal2);
+      display:grid; grid-template-columns:300px 1fr;
+      align-items:stretch;
+      margin-bottom:3.5rem;
+      box-shadow:0 6px 50px rgba(0,0,0,0.14);
+      z-index:1;
+    }
+    /* Blue glow */
+    .mcit-hero::after {
+      content:''; position:absolute;
+      left:-60px; top:50%; transform:translateY(-50%);
+      width:480px; height:480px;
+      background:radial-gradient(circle,rgba(27,95,168,0.22) 0%,transparent 65%);
+      pointer-events:none; z-index:0;
+    }
+    /* Teal left accent */
+    .mcit-hero::before {
+      content:''; position:absolute;
+      left:0; top:0; bottom:0; width:4px;
+      background:var(--gold); z-index:2;
+    }
+    .mcit-hero-brand {
+      position:relative; z-index:1;
+      display:flex; flex-direction:column; justify-content:center; gap:1.6rem;
+      padding:3rem 3rem 3rem 3.5rem;
+      border-right:1px solid rgba(255,255,255,0.07);
+    }
+    .mcit-hero-eyebrow {
+      font-size:0.54rem; font-weight:700; letter-spacing:0.32em;
+      text-transform:uppercase; color:rgba(255,255,255,0.36);
+    }
+    .mcit-hero-logo img {
+      height:64px; width:auto;
+      filter:brightness(0) invert(1);
+      opacity:0.93; display:block;
+    }
+    .mcit-hero-cta {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      font-size:0.56rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+      color:#fff; text-decoration:none;
+      background:rgba(27,95,168,0.65);
+      border:1px solid rgba(27,95,168,0.5);
+      padding:0.5rem 1.1rem; align-self:flex-start;
+      transition:background 0.2s, border-color 0.2s;
+    }
+    .mcit-hero-cta:hover { background:rgba(27,95,168,0.9); border-color:rgba(27,95,168,0.9); }
+    .mcit-hero-content {
+      position:relative; z-index:1;
+      display:flex; flex-direction:column; justify-content:center;
+      padding:3rem 3.5rem;
+    }
+    .mcit-hero-label {
+      font-size:0.54rem; font-weight:700; letter-spacing:0.28em; text-transform:uppercase;
+      color:var(--gold-light); margin-bottom:1.25rem;
+      display:flex; align-items:center; gap:0.7rem;
+    }
+    .mcit-hero-label::before { content:''; display:block; width:20px; height:1px; background:var(--gold-light); flex-shrink:0; }
+    .mcit-hero-slogan {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(1rem,1.75vw,1.35rem); font-weight:700;
+      line-height:1.65; color:rgba(255,255,255,0.82);
+      margin-bottom:0;
+    }
+    .services-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;
+      position:relative; z-index:1;
+    }
+    .service-card {
+      padding:2rem 1.75rem; background:var(--bg);
+      border:1px solid var(--border);
+      position:relative; overflow:hidden;
+      transition:border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .service-card:hover {
+      border-color:rgba(26,122,110,0.4); transform:translateY(-4px);
+      box-shadow:0 12px 40px rgba(0,0,0,0.07);
+    }
+    .service-card::before {
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:2px; background:var(--gold);
+      transform:scaleX(0); transform-origin:left;
+      transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    .service-card:hover::before { transform:scaleX(1); }
+    .svc-bg {
+      position:absolute; right:-12px; bottom:-12px;
+      width:165px; height:165px;
+      opacity:0.16; pointer-events:none;
+      stroke:var(--gold); fill:none;
+      stroke-width:1; stroke-linecap:round; stroke-linejoin:round;
+      transition:opacity 0.3s;
+    }
+    .service-card:hover .svc-bg { opacity:0.28; }
+    /* Animated BG icon keyframes */
+    @keyframes svcShieldPulse { 0%,100%{opacity:0.9} 50%{opacity:0.15} }
+    .svc-s1 { animation:svcShieldPulse 2.6s ease-in-out infinite; }
+    .svc-s2 { animation:svcShieldPulse 2.6s ease-in-out .65s infinite; }
+    .svc-s3 { animation:svcShieldPulse 2.6s ease-in-out 1.3s infinite; }
+    @keyframes svcLed { 0%,40%,60%,100%{opacity:0.9} 48%,52%{opacity:0.04} }
+    .svc-l1 { animation:svcLed 2.2s ease-in-out 0s infinite; }
+    .svc-l2 { animation:svcLed 2.2s ease-in-out .75s infinite; }
+    .svc-l3 { animation:svcLed 2.2s ease-in-out 1.5s infinite; }
+    @keyframes svcFibNode { 0%,100%{opacity:0.9} 50%{opacity:0.18} }
+    @keyframes svcFibLine { 0%,100%{opacity:0.8} 50%{opacity:0.1} }
+    .svc-fn { animation:svcFibNode 2.6s ease-in-out infinite; }
+    .svc-fl { animation:svcFibLine 3s ease-in-out infinite; }
+    @keyframes svcLensRing { 0%,100%{opacity:0.85} 50%{opacity:0.1} }
+    .svc-lr { animation:svcLensRing 3.2s ease-in-out infinite; }
+    @keyframes svcWaveFade { 0%,10%{opacity:0.88} 100%{opacity:0} }
+    .svc-wv { animation:svcWaveFade 2.6s ease-out infinite; }
+    .service-icon { margin-bottom:1.25rem; }
+    .service-icon svg { width:26px; height:26px; stroke:var(--gold); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; display:block; }
+    .service-name { font-family:'Raleway',sans-serif; font-size:0.95rem; font-weight:800; color:var(--charcoal); margin-bottom:0.6rem; letter-spacing:-0.01em; }
+    .service-desc { font-size:0.82rem; color:var(--mid); line-height:1.78; }
+
+    /* AI Enablement — spotlight card (standard size) */
+    .service-card-ai {
+      background:var(--gold-pale);
+      border-color:rgba(26,122,110,0.25);
+      padding:2rem 1.75rem;
+    }
+    /* Always-on top bar */
+    .service-card-ai::before { transform:scaleX(1); }
+    .service-card-ai:hover { border-color:rgba(26,122,110,0.55); transform:translateY(-4px); box-shadow:0 12px 40px rgba(0,0,0,0.07); }
+    /* Ambient teal glow */
+    .ai-card-glow {
+      position:absolute; left:-50px; top:-50px;
+      width:260px; height:260px;
+      background:radial-gradient(circle,rgba(26,122,110,0.07) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    /* Background neural net watermark */
+    .ai-bg-visual {
+      position:absolute; right:-22px; bottom:-18px;
+      width:165px; opacity:0.15; pointer-events:none;
+    }
+    .ai-card-content { display:flex; flex-direction:column; position:relative; z-index:1; }
+    .ai-badge {
+      display:inline-flex; align-items:center; gap:0.55rem;
+      font-size:0.52rem; font-weight:700; letter-spacing:0.28em; text-transform:uppercase;
+      color:var(--gold); background:rgba(26,122,110,0.1);
+      border:1px solid rgba(26,122,110,0.25);
+      padding:0.3rem 0.8rem; margin-bottom:1.4rem; align-self:flex-start;
+    }
+    .ai-badge-dot { width:5px; height:5px; border-radius:50%; background:var(--gold); animation:aiDotPulse 1.8s ease-in-out infinite; }
+    @keyframes aiDotPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.35;transform:scale(0.55)} }
+    .service-card-ai .service-icon { margin-bottom:0.75rem; }
+    .service-card-ai .service-icon svg { stroke:var(--gold); width:30px; height:30px; }
+    .service-card-ai .service-name { color:var(--charcoal); font-size:1.2rem; margin-bottom:0.65rem; }
+    .service-card-ai .service-desc { color:var(--mid); max-width:560px; font-size:0.875rem; margin-bottom:1.5rem; line-height:1.8; }
+    .ai-tags { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .ai-tag {
+      font-size:0.5rem; font-weight:700; letter-spacing:0.13em; text-transform:uppercase;
+      color:var(--gold); border:1px solid rgba(26,122,110,0.22); padding:0.28rem 0.7rem;
+      transition:color 0.2s,border-color 0.2s,background 0.2s;
+    }
+    .service-card-ai:hover .ai-tag { background:rgba(26,122,110,0.08); border-color:rgba(26,122,110,0.4); }
+    /* Neural network visual */
+    .ai-visual { display:flex; align-items:center; justify-content:center; position:relative; z-index:1; }
+    .ai-visual svg { width:100%; max-width:250px; height:auto; overflow:visible; }
+    /* Node animations */
+    @keyframes hubPulse { 0%,100%{opacity:1;filter:drop-shadow(0 0 7px rgba(26,122,110,0.9))} 50%{opacity:0.75;filter:drop-shadow(0 0 16px rgba(61,168,152,0.75))} }
+    @keyframes nodeFade { 0%,100%{opacity:0.75} 50%{opacity:0.3} }
+    @keyframes lineFade { 0%,100%{opacity:0.45} 50%{opacity:0.12} }
+    .ai-hub { animation:hubPulse 2.6s ease-in-out infinite; }
+    .ai-n1 { animation:nodeFade 2.2s ease-in-out 0.3s infinite; }
+    .ai-n2 { animation:nodeFade 2.2s ease-in-out 0.7s infinite; }
+    .ai-n3 { animation:nodeFade 2.2s ease-in-out 1.1s infinite; }
+    .ai-n4 { animation:nodeFade 2.2s ease-in-out 0.5s infinite; }
+    .ai-n5 { animation:nodeFade 2.2s ease-in-out 0.9s infinite; }
+    .ai-n6 { animation:nodeFade 2.2s ease-in-out 1.5s infinite; }
+    .ai-n7 { animation:nodeFade 2.2s ease-in-out 0.2s infinite; }
+    .ai-n8 { animation:nodeFade 2.2s ease-in-out 1.8s infinite; }
+    .ai-ln { animation:lineFade 3s ease-in-out infinite; }
+    .ai-ln:nth-child(2){animation-delay:0.4s}
+    .ai-ln:nth-child(3){animation-delay:0.8s}
+    .ai-ln:nth-child(4){animation-delay:1.2s}
+    .ai-ln:nth-child(5){animation-delay:0.6s}
+    .ai-ln:nth-child(6){animation-delay:1.0s}
+    .ai-ln:nth-child(7){animation-delay:1.6s}
+    .ai-ln:nth-child(8){animation-delay:0.3s}
+    .ai-ln:nth-child(9){animation-delay:0.9s}
+    .ai-ln:nth-child(10){animation-delay:1.4s}
+
+    /* Insurance — unified card */
+    /* ── INSURANCE unified card ── */
+    .service-card-insurance {
+      grid-column:1/-1;
+      display:flex; flex-direction:column;
+      background:var(--white); border-color:var(--border);
+      padding:0; overflow:hidden;
+    }
+    .service-card-insurance::before { transform:scaleX(1); }
+    .service-card-insurance:hover { border-color:rgba(26,122,110,0.45); transform:none; box-shadow:0 12px 40px rgba(0,0,0,0.07); }
+    /* Header band */
+    .ins-header {
+      background:#3a3a3a;
+      position:relative; overflow:hidden;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:2.5rem 3rem 2.5rem 3rem; gap:2rem;
+    }
+    .ins-header::after {
+      content:''; position:absolute; right:-60px; top:50%; transform:translateY(-50%);
+      width:400px; height:400px;
+      background:radial-gradient(circle,rgba(26,122,110,0.09) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    .ins-header-text { display:flex; flex-direction:column; gap:0.9rem; position:relative; z-index:1; }
+    .ins-badge {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      font-size:0.52rem; font-weight:700; letter-spacing:0.28em; text-transform:uppercase;
+      color:var(--gold-light); background:rgba(61,168,152,0.12);
+      border:1px solid rgba(61,168,152,0.28);
+      padding:0.32rem 0.9rem; align-self:flex-start;
+    }
+    .ins-badge-dot { width:5px; height:5px; border-radius:50%; background:var(--gold-light); flex-shrink:0; }
+    .ins-title {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(1.45rem,2.2vw,1.95rem);
+      font-weight:800; color:#fff;
+      letter-spacing:-0.025em; line-height:1.15; margin:0;
+    }
+    /* Body grid */
+    .ins-body {
+      display:grid; grid-template-columns:220px 1fr;
+      align-items:stretch; flex:1;
+    }
+    /* Alignment panel */
+    .ins-alignment {
+      display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+      padding:2.5rem 2rem; gap:1rem;
+      border-right:1px solid var(--border);
+      background:var(--bg);
+    }
+    .ins-alignment-eyebrow {
+      font-size:0.48rem; font-weight:700; letter-spacing:0.3em; text-transform:uppercase;
+      color:var(--gold); display:flex; align-items:center; gap:0.6rem; margin:0;
+    }
+    .ins-alignment-eyebrow::before { content:''; display:block; width:16px; height:1px; background:var(--gold); flex-shrink:0; }
+    .ins-alignment-name {
+      font-family:'Raleway',sans-serif; font-size:0.72rem; font-weight:700;
+      color:var(--charcoal); line-height:1.45; margin:0;
+    }
+    .ins-alignment img {
+      max-width:160px; opacity:0.8; filter:grayscale(10%); display:block;
+      margin-top:0.5rem; transition:opacity 0.2s;
+    }
+    .service-card-insurance:hover .ins-alignment img { opacity:0.96; }
+    /* Copy */
+    .ins-copy {
+      padding:2.5rem 3rem;
+      display:flex; flex-direction:column; justify-content:center;
+    }
+    .ins-copy p { font-size:0.82rem; color:var(--mid); line-height:1.88; margin-bottom:0.85rem; }
+    .ins-copy p:last-child { margin-bottom:0; }
+    .ins-copy strong { color:var(--charcoal); font-weight:600; }
+    .ins-pull {
+      font-family:'Raleway',sans-serif; font-size:0.9rem; font-weight:700;
+      color:var(--charcoal); line-height:1.65;
+      margin:1.25rem 0; padding-left:1.1rem;
+      border-left:3px solid var(--gold);
+    }
+    .ins-pull em { font-style:italic; color:var(--gold); }
+    .ins-close {
+      font-family:'Raleway',sans-serif; font-size:0.875rem; font-weight:800;
+      color:var(--charcoal); margin-top:0.5rem; margin-bottom:0;
+    }
+
+    /* ── COMMUNITY ── */
+    #community {
+      background:#F8F8F8; position:relative; overflow:hidden;
+    }
+    #community::before {
+      content:''; position:absolute; bottom:0; left:0; width:280px; height:280px;
+      background-image:radial-gradient(circle,rgba(26,122,110,0.15) 1px,transparent 1px);
+      background-size:18px 18px; pointer-events:none;
+    }
+    .community-sections { display:flex; flex-direction:column; gap:5.5rem; position:relative; z-index:1; }
+    .community-block {}
+    .community-sub-title {
+      font-family:'Raleway',sans-serif; font-size:1.1rem; font-weight:800;
+      color:var(--charcoal); margin-bottom:1.5rem; margin-top:0.3rem; letter-spacing:-0.01em;
+    }
+
+    /* Network Magazine feature */
+    .netmag-feature {
+      display:grid; grid-template-columns:220px 1fr; gap:0; align-items:stretch;
+      background:var(--white); border:1px solid #d4b87a;
+      overflow:hidden; position:relative;
+      box-shadow:0 8px 50px rgba(0,0,0,0.10);
+    }
+    /* Warm gold top bar */
+    .netmag-feature::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg, #8a6820, #d4a843, #f0cc6e, #d4a843, #8a6820);
+      z-index:2;
+    }
+    .netmag-logo-wrap {
+      padding:2.75rem 2rem;
+      background:linear-gradient(160deg, #111111 0%, #1c1c1c 55%, #141414 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:1.75rem; position:relative; overflow:hidden;
+    }
+    /* Fine crosshatch texture — luxury wallpaper feel */
+    .netmag-logo-wrap::after {
+      content:''; position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(212,168,67,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212,168,67,0.04) 1px, transparent 1px);
+      background-size:20px 20px; pointer-events:none;
+    }
+    /* Radial gold glow behind logo */
+    .netmag-logo-wrap::before {
+      content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:180px; height:180px;
+      background:radial-gradient(circle, rgba(212,168,67,0.07) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .netmag-logo-wrap img { width:100%; max-height:72px; object-fit:contain; filter:brightness(0) invert(1); display:block; opacity:0.93; position:relative; z-index:1; }
+    /* Thin gold rule under logo */
+    .netmag-logo-divider {
+      width:36px; height:1px;
+      background:linear-gradient(90deg, transparent, #d4a843, transparent);
+      position:relative; z-index:1;
+    }
+    .netmag-content { padding:2.75rem 3rem; display:flex; flex-direction:column; justify-content:center; }
+    .netmag-title { font-family:'Raleway',sans-serif; font-size:1.5rem; font-weight:900; color:var(--charcoal); margin-bottom:0.45rem; letter-spacing:-0.02em; }
+    .netmag-role {
+      font-size:0.5rem; font-weight:700; letter-spacing:0.3em; text-transform:uppercase;
+      color:#b8882e; margin-bottom:1.35rem;
+      display:flex; align-items:center; gap:0.65rem;
+    }
+    .netmag-role::before { content:''; display:block; width:20px; height:1px; background:#b8882e; flex-shrink:0; }
+    .netmag-content p { font-size:0.88rem; color:var(--mid); line-height:1.82; margin-bottom:1.25rem; }
+
+    /* Company / site links */
+    .company-link { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--charcoal); text-decoration:none; border-bottom:2px solid var(--gold); padding-bottom:1px; transition:color 0.2s, gap 0.2s; }
+    .company-link:hover { color:var(--gold); gap:0.65rem; }
+
+    /* Board cards */
+    .board-cards {
+      display:flex; flex-direction:column;
+      border:1px solid var(--border); background:var(--white);
+      overflow:hidden; box-shadow:0 4px 30px rgba(0,0,0,0.05);
+    }
+    .board-card {
+      display:grid; grid-template-columns:150px 1fr;
+      border-bottom:1px solid var(--border);
+      background:var(--white); position:relative;
+      transition:background 0.2s;
+    }
+    .board-card:last-child { border-bottom:none; }
+    .board-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--gold); transform:scaleY(0); transform-origin:center; transition:transform 0.3s cubic-bezier(.4,0,.2,1); z-index:1; }
+    .board-card:hover { background:#F8F8F8; }
+    .board-card:hover::before { transform:scaleY(1); }
+
+    .board-logo-panel {
+      border-right:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      padding:1.5rem 1.25rem; background:var(--bg);
+      transition:background 0.25s;
+    }
+    .board-card:hover .board-logo-panel { background:#E3E3E3; }
+    .board-logo-panel img { max-height:44px; max-width:108px; object-fit:contain; display:block; opacity:0.72; transition:opacity 0.2s, transform 0.25s; }
+    .board-card:hover .board-logo-panel img { opacity:0.95; transform:scale(1.04); }
+
+    .board-card-body {
+      padding:1.25rem 1.75rem;
+      display:flex; flex-direction:column; justify-content:center; gap:0.85rem;
+    }
+    .board-card-top { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .board-card-actions { padding-left:0; }
+    .board-card-org { font-size:0.88rem; font-weight:700; color:var(--charcoal); line-height:1.3; }
+    .board-card-role { font-size:0.7rem; color:var(--muted); margin-top:0.15rem; }
+    .board-sub-note { font-weight:400; color:var(--muted); }
+
+    .board-card-actions { display:flex; align-items:center; gap:0.9rem; flex-wrap:wrap; padding-left:calc(40px + 1rem); }
+    .board-action-email {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      font-size:0.58rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:#fff; text-decoration:none;
+      background:var(--gold); padding:0.4rem 1rem;
+      transition:background 0.2s, transform 0.15s;
+    }
+    .board-action-email:hover { background:var(--gold-light); transform:translateY(-1px); }
+    .board-action-email svg { width:11px; height:11px; stroke:#fff; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+    .board-action-sep { width:1px; height:14px; background:var(--border); }
+    .board-action-website {
+      font-size:0.58rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--muted); text-decoration:none;
+      border-bottom:1px solid var(--border); padding-bottom:1px;
+      transition:color 0.2s, border-color 0.2s;
+    }
+    .board-action-website:hover { color:var(--charcoal); border-color:var(--mid); }
+    /* Board logo link */
+    .board-logo-panel a { display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
+    /* Board CTA */
+    .board-cta {
+      display:flex; align-items:center; gap:2rem;
+      padding:1.4rem 2rem;
+      background:var(--white); border:1px solid var(--border);
+      margin-bottom:2rem;
+    }
+    .board-cta-text { font-size:0.82rem; color:var(--mid); line-height:1.72; flex:1; margin:0; }
+    .board-cta-btn {
+      display:inline-flex; align-items:center; gap:0.55rem;
+      font-size:0.57rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:#fff; text-decoration:none; white-space:nowrap; flex-shrink:0;
+      background:var(--gold); padding:0.55rem 1.3rem;
+      transition:background 0.2s, transform 0.15s;
+    }
+    .board-cta-btn:hover { background:var(--gold-light); transform:translateY(-1px); }
+    .board-cta-btn svg { width:11px; height:11px; stroke:#fff; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+
+    /* Talks video card */
+    .talk-video-thumb {
+      display:block; position:relative; overflow:hidden; height:150px; background:#000;
+    }
+    .talk-video-thumb img { width:100%; height:100%; object-fit:cover; opacity:0.75; transition:opacity 0.25s, transform 0.35s; display:block; }
+    .talk-card:hover .talk-video-thumb img { opacity:0.9; transform:scale(1.03); }
+    .talk-play-btn {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:44px; height:44px; border-radius:50%;
+      background:rgba(26,122,110,0.9); display:flex; align-items:center; justify-content:center;
+      transition:background 0.2s, transform 0.2s;
+    }
+    .talk-card:hover .talk-play-btn { background:var(--gold); transform:translate(-50%,-50%) scale(1.1); }
+    .talk-play-btn svg { width:14px; height:14px; fill:#111; stroke:none; margin-left:2px; display:block; }
+
+    /* Talks grid */
+    .talks-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-top:0.5rem; }
+    .talk-card { background:var(--white); border:1px solid var(--border); overflow:hidden; transition:border-color 0.25s, box-shadow 0.25s; }
+    .talk-card:hover { border-color:rgba(26,122,110,0.3); box-shadow:0 8px 30px rgba(0,0,0,0.06); }
+    .talk-placeholder {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      height:150px; background:var(--bg);
+    }
+    .talk-placeholder svg { width:34px; height:34px; stroke:var(--gold); fill:none; stroke-width:1; opacity:0.35; display:block; }
+    .talk-coming { font-size:0.58rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted); margin-top:0.9rem; }
+    .talk-info { padding:1.25rem 1.5rem; }
+    .talk-type { font-size:0.58rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:0.35rem; }
+    .talk-title { font-family:'Raleway',sans-serif; font-size:0.88rem; font-weight:700; color:var(--charcoal); }
+
+    /* ── BUSINESS PORTFOLIO ── */
+    #business {
+      background:var(--bg); position:relative; overflow:hidden;
+    }
+    #business::before {
+      content:''; position:absolute; top:0; right:0; width:320px; height:320px;
+      background-image:radial-gradient(circle,rgba(26,122,110,0.2) 1.2px,transparent 1.2px);
+      background-size:18px 18px; pointer-events:none;
+    }
+    #business::after {
+      content:''; position:absolute; bottom:2rem; left:5rem;
+      font-family:'Raleway',sans-serif; font-size:clamp(8rem,14vw,16rem); font-weight:700;
+      color:transparent; -webkit-text-stroke:2px rgba(26,122,110,0.1);
+      line-height:1; pointer-events:none; user-select:none;
+    }
+    .companies-deco { position:absolute; top:3.5rem; left:5rem; display:flex; align-items:center; gap:1rem; opacity:0.55; pointer-events:none; }
+    .companies-deco span { display:block; height:2px; background:var(--gold); }
+    .companies-deco span:nth-child(1){width:80px;} .companies-deco span:nth-child(2){width:24px;} .companies-deco span:nth-child(3){width:8px;}
+
+    /* Business Philosophy block */
+    .biz-philosophy { margin-bottom:4rem; position:relative; z-index:1; text-align:center; }
+    .biz-quote-mark {
+      font-family:'Raleway',sans-serif; font-size:5rem; font-weight:900;
+      color:var(--gold); line-height:0.6; display:block; margin-bottom:1rem;
+      opacity:0.5;
+    }
+    .biz-quote-text {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(1.15rem,1.9vw,1.55rem);
+      font-weight:700; color:var(--charcoal);
+      line-height:1.65; margin:0 auto 1.5rem;
+      max-width:680px; font-style:italic;
+    }
+    .biz-quote-attr {
+      font-size:0.54rem; font-weight:700; letter-spacing:0.3em;
+      text-transform:uppercase; color:var(--gold);
+      margin:0 0 3rem;
+      display:flex; align-items:center; justify-content:center; gap:0.8rem;
+    }
+    .biz-quote-attr::before,
+    .biz-quote-attr::after { content:''; display:block; width:32px; height:1px; background:var(--gold); flex-shrink:0; }
+    .biz-philosophy-body {
+      max-width:780px; margin:0 auto;
+      text-align:left;
+    }
+    .biz-philosophy-body p {
+      font-size:0.88rem; color:var(--mid); line-height:1.92;
+      margin-bottom:1.1rem;
+    }
+    .biz-philosophy-body p:last-child { margin-bottom:0; }
+    .biz-philosophy-body p strong { color:var(--charcoal); font-weight:600; }
+
+    /* Community Philosophy block */
+    .comm-philosophy { margin-bottom:4.5rem; position:relative; z-index:1; text-align:center; }
+    .comm-divider {
+      display:flex; align-items:center; justify-content:center; gap:0.85rem;
+      margin-bottom:2rem;
+    }
+    .comm-divider::before,
+    .comm-divider::after { content:''; display:block; width:52px; height:1px; background:var(--gold); flex-shrink:0; }
+    .comm-divider-diamond {
+      width:7px; height:7px; background:var(--gold);
+      transform:rotate(45deg); flex-shrink:0;
+    }
+    .comm-pull {
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(1.1rem,1.75vw,1.42rem);
+      font-weight:700; color:var(--charcoal);
+      line-height:1.65; margin:0 auto 2.25rem;
+      max-width:620px; font-style:italic;
+    }
+    .comm-pull em { color:var(--gold); font-style:italic; }
+    .comm-philosophy-body {
+      max-width:780px; margin:0 auto;
+      text-align:left;
+    }
+    .comm-philosophy-body p {
+      font-size:0.88rem; color:var(--mid); line-height:1.92;
+      margin-bottom:1.1rem;
+    }
+    .comm-philosophy-body p:last-child { margin-bottom:0; }
+    .comm-philosophy-body strong { color:var(--charcoal); font-weight:600; }
+
+    .biz-stack {
+      display:flex; flex-direction:column;
+      max-width:960px; position:relative; z-index:1;
+      border:1px solid var(--border); overflow:hidden;
+      box-shadow:0 4px 40px rgba(0,0,0,0.06);
+    }
+    .biz-card {
+      display:grid; grid-template-columns:260px 1fr;
+      background:var(--white); border-bottom:1px solid var(--border);
+      overflow:hidden; position:relative;
+      transition:background 0.2s;
+    }
+    .biz-card:last-child { border-bottom:none; }
+    .biz-card::before {
+      content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+      background:var(--gold); transform:scaleY(0); transform-origin:bottom;
+      transition:transform 0.35s cubic-bezier(.4,0,.2,1); z-index:2;
+    }
+    .biz-card:hover { background:#F5F5F5; }
+    .biz-card:hover::before { transform:scaleY(1); }
+    .biz-logo-area {
+      border-right:1px solid var(--border);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:2.5rem 2rem; background:var(--bg);
+      position:relative; min-height:150px;
+      transition:background 0.25s;
+    }
+    .biz-card:hover .biz-logo-area { background:#E3E3E3; }
+    .biz-num {
+      position:absolute; top:1rem; left:1.25rem;
+      font-family:'Raleway',sans-serif; font-size:0.7rem; font-weight:800;
+      color:rgba(26,122,110,0.35); letter-spacing:0.04em;
+    }
+    .biz-logo-area img { max-height:72px; max-width:180px; width:auto; object-fit:contain; display:block; transition:transform 0.3s; }
+    .biz-card:hover .biz-logo-area img { transform:scale(1.05); }
+    .network-logo { filter:brightness(0); }
+    .valleycrest-logo { max-height:58px !important; }
+    .biz-info {
+      padding:2rem 2.5rem;
+      display:flex; flex-direction:column; justify-content:center; gap:0.4rem;
+    }
+    .biz-role { font-size:0.58rem; font-weight:700; letter-spacing:0.26em; text-transform:uppercase; color:var(--gold); margin-bottom:0.2rem; display:flex; align-items:center; gap:0.75rem; }
+    .biz-since { font-size:0.55rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); border-left:1px solid var(--border); padding-left:0.75rem; }
+    .biz-name { font-family:'Raleway',sans-serif; font-size:1.3rem; font-weight:900; color:var(--charcoal); letter-spacing:-0.01em; margin-bottom:0.45rem; }
+    .biz-desc { font-size:0.84rem; color:var(--mid); line-height:1.78; margin-bottom:1rem; }
+    .biz-link { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.66rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--charcoal); text-decoration:none; border-bottom:2px solid var(--gold); padding-bottom:1px; width:fit-content; transition:color 0.2s, gap 0.2s; }
+    .biz-link:hover { color:var(--gold); gap:0.65rem; }
+
+    /* ── CONNECT ── */
+    #connect {
+      background:var(--charcoal); color:#fff;
+      position:relative; overflow:hidden;
+      padding:7rem 5rem;
+    }
+    #connect::before { content:'CONNECT'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Raleway',sans-serif; font-size:clamp(5rem,13vw,13rem); font-weight:900; color:rgba(255,255,255,0.025); white-space:nowrap; pointer-events:none; letter-spacing:-0.01em; }
+    .contact-dots { position:absolute; top:0; right:0; width:260px; height:260px; background-image:radial-gradient(circle,rgba(26,122,110,0.5) 1px,transparent 1px); background-size:20px 20px; opacity:0.4; pointer-events:none; }
+    .contact-dots-bl { position:absolute; bottom:0; left:0; width:200px; height:200px; background-image:radial-gradient(circle,rgba(26,122,110,0.5) 1px,transparent 1px); background-size:20px 20px; opacity:0.3; pointer-events:none; }
+    .contact-accent { position:absolute; border-radius:50%; border:1px solid rgba(26,122,110,0.25); pointer-events:none; }
+    .contact-accent-1{width:440px;height:440px;top:-160px;left:-80px;}
+    .contact-accent-2{width:260px;height:260px;bottom:-90px;right:-60px;}
+    .contact-accent-3{width:130px;height:130px;top:20%;right:8%;border-color:rgba(26,122,110,0.35);}
+    .contact-accent-4{width:60px;height:60px;top:30%;right:14%;border-color:rgba(26,122,110,0.45);}
+    .contact-bracket-tl,.contact-bracket-br{position:absolute;width:44px;height:44px;pointer-events:none;opacity:0.6;}
+    .contact-bracket-tl{top:2.5rem;left:5rem;border-top:2px solid var(--gold);border-left:2px solid var(--gold);}
+    .contact-bracket-br{bottom:2.5rem;right:5rem;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);}
+
+    .connect-inner {
+      display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:start;
+      position:relative; z-index:1; max-width:1060px;
+    }
+    #connect .label { color:var(--gold-light); }
+    #connect .label::before { background:var(--gold-light); }
+    #connect .section-title { color:#fff; }
+    #connect .rule { background:var(--gold); }
+    .contact-sub { font-size:0.95rem; color:rgba(255,255,255,0.42); max-width:420px; line-height:1.88; margin-bottom:2.5rem; }
+
+    .connect-direct { display:flex; flex-direction:column; gap:0.75rem; }
+    .direct-item {
+      display:flex; align-items:center; gap:1.25rem;
+      padding:1rem 1.25rem;
+      border:1px solid rgba(255,255,255,0.08);
+      text-decoration:none; color:#fff;
+      transition:border-color 0.2s, background 0.2s;
+    }
+    .direct-item:hover { border-color:rgba(26,122,110,0.5); background:rgba(26,122,110,0.06); }
+    .direct-label { font-size:0.56rem; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:0.12rem; }
+    .direct-value { font-size:0.85rem; font-weight:600; color:#fff; }
+    .direct-icon { width:36px; height:36px; border-radius:50%; background:rgba(26,122,110,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .direct-icon svg { width:15px; height:15px; stroke:var(--gold); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; display:block; }
+
+    .connect-social-label { font-size:0.58rem; font-weight:700; letter-spacing:0.32em; text-transform:uppercase; color:rgba(255,255,255,0.28); margin-bottom:1.25rem; }
+    .social-links-list { display:flex; flex-direction:column; gap:0.75rem; }
+    .social-link {
+      display:flex; align-items:center; gap:1.25rem;
+      padding:1rem 1.25rem;
+      border:1px solid rgba(255,255,255,0.08);
+      text-decoration:none; color:#fff;
+      transition:border-color 0.2s, background 0.2s;
+    }
+    .social-link:hover { border-color:rgba(26,122,110,0.5); background:rgba(26,122,110,0.06); }
+    .social-icon { width:36px; height:36px; border-radius:50%; background:rgba(26,122,110,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .social-icon svg { width:15px; height:15px; stroke:var(--gold); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; display:block; }
+    .social-info { flex:1; }
+    .social-label { font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#fff; }
+    .social-handle { font-size:0.72rem; color:rgba(255,255,255,0.32); margin-top:0.1rem; }
+    .social-arrow { width:13px; height:13px; stroke:rgba(255,255,255,0.2); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; display:block; transition:stroke 0.2s; }
+    .social-link:hover .social-arrow, .direct-item:hover .social-arrow { stroke:var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background:#0a0a0a; padding:2.25rem 5rem;
+      display:flex; justify-content:space-between; align-items:center; position:relative;
+    }
+    footer::before { content:''; position:absolute; top:0; left:5rem; right:5rem; height:1px; background:linear-gradient(to right,transparent,rgba(26,122,110,0.25) 30%,rgba(26,122,110,0.25) 70%,transparent); }
+    footer img { height:28px; width:auto; opacity:0.35; filter:brightness(0) invert(1); }
+    footer span { font-size:0.68rem; color:#3a3a3a; letter-spacing:0.12em; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1100px){
+      nav { padding:1rem 2.5rem; }
+      .nav-links { gap:1.5rem; }
+      .hero { grid-template-columns:1fr; min-height:auto; }
+      .hero-left { padding:7rem 2.5rem 4rem; }
+      .hero-right { height:60vw; min-height:340px; }
+      section { padding:5rem 2.5rem; }
+      #connect { padding:5rem 2.5rem; }
+.about-layout { grid-template-columns:1fr; gap:3rem; }
+      .about-photo-wrap { max-width:280px; }
+      .services-grid { grid-template-columns:repeat(2,1fr); }
+      .service-card-insurance { grid-template-columns:1fr; gap:2.5rem; }
+      .insurance-logo-wrap { align-items:flex-start; flex-direction:row; gap:2rem; align-items:center; }
+      .netmag-feature { grid-template-columns:160px 1fr; gap:2.5rem; }
+      .talks-grid { grid-template-columns:repeat(2,1fr); }
+      .biz-card { grid-template-columns:1fr; }
+      .biz-logo-area { border-right:none; border-bottom:1px solid var(--border); min-height:100px; }
+      .biz-num { top:0.75rem; left:1rem; }
+      .connect-inner { grid-template-columns:1fr; gap:4rem; }
+      footer { padding:1.5rem 2.5rem; }
+      .companies-deco { left:2.5rem; }
+      .contact-bracket-tl { left:2.5rem; }
+      .contact-bracket-br { right:2.5rem; }
+    }
+    @media(max-width:700px){
+      nav { padding:1rem 1.5rem; }
+      .nav-links { display:none; }
+      section { padding:4rem 1.5rem; }
+      #connect { padding:4rem 1.5rem; }
+.hero-stats { flex-wrap:wrap; gap:1.5rem; }
+      .hero-sectors { gap:0.4rem; }
+      .services-grid { grid-template-columns:1fr; }
+      .service-card-insurance { padding:2rem; }
+      .netmag-feature { grid-template-columns:1fr; gap:2rem; }
+      .talks-grid { grid-template-columns:1fr; }
+      .connect-inner { gap:3rem; }
+      footer { flex-direction:column; gap:0.5rem; padding:1.5rem; text-align:center; }
+      .companies-deco { left:1.5rem; }
+      .contact-bracket-tl, .contact-bracket-br { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+      <img src="Marketing/Brand/CM_Logo-Black.png" alt="Chris Morganelli" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="#business">Business Portfolio</a></li>
+      <li><a href="#connect" class="nav-cta">Connect</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero" id="home">
+    <div class="hero-left">
+      <div class="hero-gold-bar"></div>
+      <div class="hero-dots-tr"></div>
+      <div class="hero-arc"></div>
+      <div class="hero-arc hero-arc-2"></div>
+
+      <span class="hero-eyebrow">Dad. Executive. Community Builder.</span>
+      <h1>Protecting what<br>matters. Innovating<br>for <em>growth.</em></h1>
+
+<div class="hero-cta">
+        <a href="#about" class="btn btn-gold">My Story</a>
+        <a href="#services" class="btn btn-outline-hero">Services</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <img src="Headshot/Chris-Morganelli.JPG" alt="Chris Morganelli" />
+      <div class="hero-right-overlay"></div>
+      <div class="hero-border-accent"></div>
+      <div class="hero-circle hero-circle-1"></div>
+      <div class="hero-circle hero-circle-2"></div>
+      <div class="hero-circle hero-circle-3"></div>
+      <span class="hero-tag">Bethlehem, PA</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-layout">
+
+      <div class="about-sidebar reveal-left">
+        <div class="about-photo-wrap">
+          <img src="Headshot/Chris-Morganelli-2.JPG" alt="Chris Morganelli" class="about-photo" />
+        </div>
+        <div class="pillars stagger">
+          <div class="pillar">
+            <div class="pillar-icon"><svg viewBox="0 0 16 16"><polyline points="1,11 5,7 9,9.5 15,3.5"/><polyline points="11,3.5 15,3.5 15,7.5"/></svg></div>
+            <p class="pillar-title">Growth</p><p class="pillar-text">Driving expansion across every organization</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon"><svg viewBox="0 0 16 16"><path d="M6.5 9.5a3 3 0 0 0 4.24.01l2-2a3 3 0 0 0-4.24-4.24l-1.17 1.16"/><path d="M9.5 6.5a3 3 0 0 0-4.24-.01l-2 2a3 3 0 0 0 4.24 4.24l1.17-1.16"/></svg></div>
+            <p class="pillar-title">Connection</p><p class="pillar-text">Forging authentic relationships that open doors</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3.5"/><path d="M3.5 14l1.8-3.5h5.4L12.5 14"/><line x1="6" y1="10.5" x2="6" y2="14"/><line x1="10" y1="10.5" x2="10" y2="14"/></svg></div>
+            <p class="pillar-title">Culture</p><p class="pillar-text">Building teams that exemplify excellence</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon"><svg viewBox="0 0 16 16"><path d="M1 8s2.3-5 7-5 7 5 7 5-2.3 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg></div>
+            <p class="pillar-title">Presence</p><p class="pillar-text">Elevating brand awareness across the region</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-content reveal-right">
+        
+        <h2 class="section-title">Relentlessly curious.<br><span style="color:var(--gold);">Unapologetically bold.</span></h2>
+        <div class="rule"></div>
+        <p class="bold-open">
+          I am not interested in building businesses for the sake of building businesses. I am interested in building things that matter—companies that create opportunity, partnerships that solve problems, and relationships that stand the test of time. Everything else is simply the result of pursuing that mission with consistency and purpose.
+        </p>
+        <p>
+          I grew up in Bethlehem and have watched the Lehigh Valley evolve my entire life — businesses scale, new brands arrive, industries shift, and opportunities emerge. What I noticed early was that this region was never short on potential. It was waiting for people willing to act on it. That mindset became the foundation for everything I do. Not everything went as planned along the way, but I learned from all of those experiences, and stayed committed to one standard throughout: bring authentic, real value to every person and organization I work with. I live in Nazareth now, raising my two children in the same community that helped shape me, and that upbringing drives everything I do.
+        </p>
+        <p>
+          While my roots are firmly planted here, my perspective has never been limited by geography. The relationships I've built, the businesses I've helped grow, and the opportunities I've pursued have expanded well beyond the Lehigh Valley. I believe great ideas, strong partnerships, and meaningful impact know no boundaries. The lessons I learned here became the foundation for building connections, creating opportunities, and doing business wherever they exist.
+        </p>
+        <p>
+          Over a decade ago, I co-founded MCIT, and leading it has been one of the most defining experiences of my career. What we do matters. We protect businesses' data, money, and reputations every single day. We help organizations leverage technology to become sharper, faster, and more resilient versions of themselves. As AI accelerates the pace of change, we help companies embrace that future with confidence, clarity, and curiosity. The way I see it, AI is not a threat — it is an invitation to innovate, and the organizations that accept it will compete on a level that simply was not possible before.
+        </p>
+        <p>
+          But no solution is ever 100%. We say that openly. It is not a question of if something happens — it is when, and how do we fare through it together. That reality led me to align MCIT with Seltzer Group Partners. Cybersecurity and business insurance work together to close the gap that even the best technology cannot fully eliminate. Together, they form a complete philosophy: protect the asset, protect the organization, and leave nothing exposed. Protecting people's money, data, and reputations is not just a business model. It is a responsibility I take seriously.
+        </p>
+        <p>
+          Beyond business, I remain deeply committed to the community that helped shape me. I serve on numerous boards and nonprofit campaign cabinets doing philanthropic work. I also co-created Network Magazine to give business leaders a platform to connect, collaborate, and grow. This is not obligation. It is conviction. The more you build, the more you owe the people and places that helped make it possible.
+        </p>
+        <p>
+          I have also expanded and diversified into real estate through Morganelli Properties and ValleyCrest Property Management because I believe in building across multiple pillars, not just one. At the end of the day, what I am working toward is a lasting legacy: a reputation built on authenticity, meaningful relationships, protecting what matters most, and continuously pursuing what comes next. Whether that impact is felt across the street or across the country, the mission remains the same — create value, build trust, and leave things better than you found them.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="reveal" style="position:relative;z-index:1;">
+      <h2 class="section-title">Services</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="mcit-hero reveal">
+      <div class="mcit-hero-brand">
+        <span class="mcit-hero-eyebrow">Services Powered &amp; Provided By</span>
+        <div class="mcit-hero-logo">
+          <img src="Companies/MCIT/Marketing/Brand/mcit-v1.png" alt="MCIT" />
+        </div>
+        <a href="https://mclvit.com/" class="mcit-hero-cta" target="_blank" rel="noopener">Visit MCIT &rarr;</a>
+      </div>
+      <div class="mcit-hero-content">
+        <p class="mcit-hero-label">What We Deliver</p>
+        <p class="mcit-hero-slogan">We protect businesses' money, data, and reputations, while supporting and enabling innovation, growth, and productivity with risk management, tech support, and AI.</p>
+      </div>
+    </div>
+
+    <div class="services-grid stagger">
+
+      <!-- AI Enablement — Spotlight card -->
+      <div class="service-card service-card-ai">
+        <div class="ai-card-glow"></div>
+        <!-- Neural network watermark -->
+        <svg class="ai-bg-visual" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="110" cy="100" r="65" fill="rgba(26,122,110,0.07)"/>
+          <circle cx="110" cy="100" r="40" fill="rgba(26,122,110,0.12)"/>
+          <g stroke="rgba(26,122,110,0.55)" stroke-width="0.9">
+            <line x1="110" y1="100" x2="45" y2="52" class="ai-ln"/>
+            <line x1="110" y1="100" x2="178" y2="42" class="ai-ln"/>
+            <line x1="110" y1="100" x2="200" y2="110" class="ai-ln"/>
+            <line x1="110" y1="100" x2="155" y2="172" class="ai-ln"/>
+            <line x1="110" y1="100" x2="60" y2="178" class="ai-ln"/>
+            <line x1="110" y1="100" x2="18" y2="118" class="ai-ln"/>
+            <line x1="45" y1="52" x2="90" y2="12" class="ai-ln"/>
+            <line x1="45" y1="52" x2="18" y2="118" class="ai-ln"/>
+            <line x1="45" y1="52" x2="178" y2="42" class="ai-ln"/>
+            <line x1="178" y1="42" x2="210" y2="60" class="ai-ln"/>
+          </g>
+          <circle r="2.5" fill="rgba(61,168,152,0.9)">
+            <animateMotion dur="2.2s" repeatCount="indefinite" path="M 110 100 L 45 52"/>
+          </circle>
+          <circle r="2" fill="rgba(61,168,152,0.7)">
+            <animateMotion dur="2.8s" begin="0.6s" repeatCount="indefinite" path="M 110 100 L 200 110"/>
+          </circle>
+          <circle cx="110" cy="100" r="11" fill="rgba(26,122,110,0.2)" class="ai-hub"/>
+          <circle cx="110" cy="100" r="7" fill="rgba(26,122,110,0.85)" class="ai-hub"/>
+          <circle cx="110" cy="100" r="3.5" fill="rgba(61,168,152,1)" class="ai-hub"/>
+          <circle cx="45" cy="52" r="5" fill="rgba(26,122,110,0.7)" class="ai-n1"/>
+          <circle cx="178" cy="42" r="4" fill="rgba(26,122,110,0.6)" class="ai-n2"/>
+          <circle cx="200" cy="110" r="6" fill="rgba(26,122,110,0.65)" class="ai-n3"/>
+          <circle cx="155" cy="172" r="5" fill="rgba(26,122,110,0.6)" class="ai-n4"/>
+          <circle cx="60" cy="178" r="4" fill="rgba(26,122,110,0.55)" class="ai-n5"/>
+          <circle cx="18" cy="118" r="5" fill="rgba(26,122,110,0.6)" class="ai-n6"/>
+          <circle cx="90" cy="12" r="3" fill="rgba(26,122,110,0.4)" class="ai-n7"/>
+          <circle cx="210" cy="60" r="3" fill="rgba(26,122,110,0.38)" class="ai-n8"/>
+        </svg>
+        <div class="ai-card-content">
+          <div class="ai-badge"><span class="ai-badge-dot"></span>Spotlight</div>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+            </svg>
+          </div>
+          <h3 class="service-name">AI Enablement</h3>
+          <p class="service-desc">AI isn't the future — it's the competitive edge available right now. We identify where it moves the needle and deploy tools that automate, accelerate, and redefine what's possible.</p>
+          <div class="ai-tags">
+            <span class="ai-tag">Automation</span>
+            <span class="ai-tag">AI Strategy</span>
+            <span class="ai-tag">Workflows</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <!-- Cybersecurity: pulsing nested shields + sweeping scan line + traveling threat dot -->
+        <svg class="svc-bg" viewBox="0 0 120 135">
+          <path class="svc-s1" d="M60,8 L12,26 L12,68 C12,96 32,118 60,128 C88,118 108,96 108,68 L108,26 Z"/>
+          <path class="svc-s2" d="M60,24 L26,38 L26,68 C26,88 40,104 60,114 C80,104 94,88 94,68 L94,38 Z"/>
+          <path class="svc-s3" d="M60,40 L40,50 L40,68 C40,82 49,93 60,100 C71,93 80,82 80,68 L80,50 Z"/>
+          <line x1="20" y1="60" x2="100" y2="60">
+            <animate attributeName="y1" values="44;86;44" dur="2.5s" repeatCount="indefinite" calcMode="easeInOut"/>
+            <animate attributeName="y2" values="44;86;44" dur="2.5s" repeatCount="indefinite" calcMode="easeInOut"/>
+          </line>
+          <circle cx="60" cy="68" r="4"/>
+          <circle r="2.5" fill="rgba(61,168,152,0.95)" stroke="none">
+            <animateMotion dur="3.5s" repeatCount="indefinite"
+              path="M 60 8 L 12 26 L 12 68 C 12 96 32 118 60 128 C 88 118 108 96 108 68 L 108 26 Z"/>
+          </circle>
+        </svg>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L4 6v6c0 5.5 3.6 10 8 11 4.4-1 8-5.5 8-11V6L12 2z"/>
+          </svg>
+        </div>
+        <h3 class="service-name">Cybersecurity</h3>
+        <p class="service-desc">Proactive defense and threat management to keep your data, systems, and reputation protected around the clock.</p>
+      </div>
+
+      <div class="service-card">
+        <!-- Managed IT: server rack with blinking LEDs + streaming data packets down the side -->
+        <svg class="svc-bg" viewBox="0 0 120 110">
+          <rect x="8" y="8" width="100" height="26" rx="3"/>
+          <line x1="16" y1="21" x2="68" y2="21"/>
+          <rect x="76" y="15" width="8" height="8" rx="1"/>
+          <circle cx="100" cy="21" r="4" class="svc-l1"/>
+          <circle cx="112" cy="21" r="4" class="svc-l2"/>
+          <rect x="8" y="42" width="100" height="26" rx="3"/>
+          <line x1="16" y1="55" x2="68" y2="55"/>
+          <rect x="76" y="49" width="8" height="8" rx="1"/>
+          <circle cx="100" cy="55" r="4" class="svc-l2"/>
+          <circle cx="112" cy="55" r="4" class="svc-l3"/>
+          <rect x="8" y="76" width="100" height="26" rx="3"/>
+          <line x1="16" y1="89" x2="68" y2="89"/>
+          <rect x="76" y="83" width="8" height="8" rx="1"/>
+          <circle cx="100" cy="89" r="4" class="svc-l3"/>
+          <circle cx="112" cy="89" r="4" class="svc-l1"/>
+          <circle r="3.5" fill="rgba(61,168,152,0.95)" stroke="none">
+            <animateMotion dur="1.7s" repeatCount="indefinite" path="M 6 8 L 6 102"/>
+          </circle>
+          <circle r="3.5" fill="rgba(61,168,152,0.75)" stroke="none">
+            <animateMotion dur="1.7s" begin="0.85s" repeatCount="indefinite" path="M 6 8 L 6 102"/>
+          </circle>
+        </svg>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="1"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3 class="service-name">Managed IT</h3>
+        <p class="service-desc">End-to-end IT management so your team stays productive and your infrastructure stays ahead of the curve.</p>
+      </div>
+
+      <div class="service-card">
+        <!-- Data & Fiber: hub-and-spoke topology with pulsing nodes + multiple packet streams -->
+        <svg class="svc-bg" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="18" style="opacity:0.3;stroke:var(--gold);fill:none;"/>
+          <line x1="60" y1="60" x2="10" y2="16" class="svc-fl"/>
+          <line x1="60" y1="60" x2="110" y2="16" class="svc-fl" style="animation-delay:.5s"/>
+          <line x1="60" y1="60" x2="116" y2="64" class="svc-fl" style="animation-delay:1.0s"/>
+          <line x1="60" y1="60" x2="100" y2="110" class="svc-fl" style="animation-delay:1.5s"/>
+          <line x1="60" y1="60" x2="20" y2="110" class="svc-fl" style="animation-delay:0.8s"/>
+          <line x1="60" y1="60" x2="4" y2="64" class="svc-fl" style="animation-delay:1.3s"/>
+          <circle cx="60" cy="60" r="9" fill="rgba(26,122,110,0.8)" stroke="none" class="svc-fn"/>
+          <circle cx="10" cy="16" r="5" fill="rgba(26,122,110,0.7)" stroke="none" class="svc-fn" style="animation-delay:.4s"/>
+          <circle cx="110" cy="16" r="5" fill="rgba(26,122,110,0.7)" stroke="none" class="svc-fn" style="animation-delay:.8s"/>
+          <circle cx="116" cy="64" r="5" fill="rgba(26,122,110,0.7)" stroke="none" class="svc-fn" style="animation-delay:1.2s"/>
+          <circle cx="100" cy="110" r="5" fill="rgba(26,122,110,0.7)" stroke="none" class="svc-fn" style="animation-delay:1.6s"/>
+          <circle cx="20" cy="110" r="5" fill="rgba(26,122,110,0.7)" stroke="none" class="svc-fn" style="animation-delay:2.0s"/>
+          <circle cx="4" cy="64" r="5" fill="rgba(26,122,110,0.7)" stroke="none" class="svc-fn" style="animation-delay:.6s"/>
+          <circle r="2.5" fill="rgba(61,168,152,0.95)" stroke="none">
+            <animateMotion dur="1.6s" repeatCount="indefinite" path="M 60 60 L 10 16"/>
+          </circle>
+          <circle r="2.5" fill="rgba(61,168,152,0.85)" stroke="none">
+            <animateMotion dur="2s" begin="0.5s" repeatCount="indefinite" path="M 60 60 L 116 64"/>
+          </circle>
+          <circle r="2.5" fill="rgba(61,168,152,0.75)" stroke="none">
+            <animateMotion dur="2.1s" begin="1.1s" repeatCount="indefinite" path="M 60 60 L 20 110"/>
+          </circle>
+          <circle r="2" fill="rgba(61,168,152,0.65)" stroke="none">
+            <animateMotion dur="1.8s" begin="0.3s" repeatCount="indefinite" path="M 60 60 L 110 16"/>
+          </circle>
+        </svg>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+          </svg>
+        </div>
+        <h3 class="service-name">Data &amp; Fiber Network Wiring</h3>
+        <p class="service-desc">Reliable, high-speed network infrastructure built for the demands of modern business — from the ground up.</p>
+      </div>
+
+      <div class="service-card">
+        <!-- Access Control: camera lens rings pulsing + rotating radar sweep arm + ping blip -->
+        <svg class="svc-bg" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" class="svc-lr"/>
+          <circle cx="60" cy="60" r="36" class="svc-lr" style="animation-delay:.8s"/>
+          <circle cx="60" cy="60" r="20" class="svc-lr" style="animation-delay:1.6s"/>
+          <line x1="60" y1="4" x2="60" y2="18" stroke-width="0.8"/>
+          <line x1="60" y1="102" x2="60" y2="116" stroke-width="0.8"/>
+          <line x1="4" y1="60" x2="18" y2="60" stroke-width="0.8"/>
+          <line x1="102" y1="60" x2="116" y2="60" stroke-width="0.8"/>
+          <line x1="22" y1="22" x2="30" y2="30" stroke-width="0.8"/>
+          <line x1="98" y1="22" x2="90" y2="30" stroke-width="0.8"/>
+          <line x1="22" y1="98" x2="30" y2="90" stroke-width="0.8"/>
+          <line x1="98" y1="98" x2="90" y2="90" stroke-width="0.8"/>
+          <line x1="60" y1="60" x2="60" y2="10">
+            <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="4s" repeatCount="indefinite"/>
+          </line>
+          <circle cx="60" cy="60" r="4" fill="rgba(26,122,110,0.9)" stroke="none"/>
+          <circle cx="60" cy="10" r="0" fill="rgba(61,168,152,1)" stroke="none">
+            <animate attributeName="r" values="0;6;0" dur="4s" repeatCount="indefinite" calcMode="easeInOut"/>
+            <animate attributeName="opacity" values="0.95;0.3;0" dur="4s" repeatCount="indefinite"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="4s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3 class="service-name">Access Control &amp; Surveillance</h3>
+        <p class="service-desc">Physical and digital access solutions that put you in control of who enters your space and how your assets are monitored.</p>
+      </div>
+
+      <div class="service-card">
+        <!-- VoIP: mic with staggered expanding sound wave arcs fading outward -->
+        <svg class="svc-bg" viewBox="0 0 120 130">
+          <rect x="46" y="10" width="28" height="52" rx="14"/>
+          <path d="M28,58 a32,32 0 0,0 64,0"/>
+          <line x1="60" y1="90" x2="60" y2="112"/>
+          <line x1="38" y1="112" x2="82" y2="112"/>
+          <path class="svc-wv" d="M24,40 a40,40 0 0,0 0,32" style="animation-delay:0s"/>
+          <path class="svc-wv" d="M13,28 a54,54 0 0,0 0,56" style="animation-delay:.85s"/>
+          <path class="svc-wv" d="M2,16 a68,68 0 0,0 0,80" style="animation-delay:1.7s"/>
+          <path class="svc-wv" d="M96,40 a40,40 0 0,1 0,32" style="animation-delay:0s"/>
+          <path class="svc-wv" d="M107,28 a54,54 0 0,1 0,56" style="animation-delay:.85s"/>
+          <path class="svc-wv" d="M118,16 a68,68 0 0,1 0,80" style="animation-delay:1.7s"/>
+        </svg>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <h3 class="service-name">VoIP Services</h3>
+        <p class="service-desc">Modern, scalable communication systems that keep your business connected without the limitations of traditional phone infrastructure.</p>
+      </div>
+
+      <!-- Insurance — unified card -->
+      <div class="service-card service-card-insurance">
+
+        <!-- Header band -->
+        <div class="ins-header">
+          <div class="ins-header-text">
+            <div class="ins-badge">
+              <span class="ins-badge-dot"></span>
+              The Final Puzzle Piece
+            </div>
+            <h3 class="ins-title">Business &amp; Cyber Insurance</h3>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="ins-body">
+
+          <!-- Left: alignment panel -->
+          <div class="ins-alignment">
+            <p class="ins-alignment-eyebrow">Responsible Alignment</p>
+            <p class="ins-alignment-name">Seltzer Group Partners</p>
+            <img src="Companies/Seltzer Group Partners/Seltzer_Group_YG_RGB_1080pxW.png" alt="Seltzer Group Partners" />
+          </div>
+
+          <!-- Right: copy -->
+          <div class="ins-copy">
+            <p>Technology is a critical part of protecting a business — but it isn't the entire solution.</p>
+            <p>When we founded MCIT, our mission was never to simply fix computers or manage networks. Our goal was to help organizations reduce risk, strengthen operations, and protect what they've worked so hard to build.</p>
+            <p>Over the years, we've learned an important truth: no matter how strong your cybersecurity strategy is, risk can never be completely eliminated. You can deploy advanced security tools, monitor systems around the clock, train employees, and follow best practices — and still experience a cyberattack, data breach, business interruption, or other unforeseen event. <strong>That's where insurance becomes essential.</strong></p>
+            <div class="ins-pull">
+              Cybersecurity helps reduce the likelihood of an incident.<br>
+              Insurance helps reduce the financial and operational impact when one occurs.
+            </div>
+            <p>After seeing organizations navigate real-world incidents and recover from significant losses, it became clear that true business protection requires both. Security alone isn't enough. Insurance alone isn't enough. The strongest approach combines prevention, preparedness, and protection — and that's why MCIT aligned with Seltzer Group Partners.</p>
+            <div class="ins-pull">
+              The question is no longer: <em>"Are you secure?"</em><br>
+              It's: <em>"Are you secure — and covered if something still happens?"</em>
+            </div>
+            <p class="ins-close">Every service we provide is designed to protect your business. Insurance is what helps protect its future.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section id="community">
+    <div class="reveal" style="position:relative;z-index:1;margin-bottom:4.5rem;">
+      <h2 class="section-title">Community</h2>
+      <div class="rule"></div>
+    </div>
+
+    <div class="comm-philosophy reveal">
+      <div class="comm-divider"><span class="comm-divider-diamond"></span></div>
+      <p class="comm-pull">While business creates opportunity, <em>community creates impact.</em></p>
+      <div class="comm-philosophy-body">
+        <p>Community has always been an important part of my journey. That's what led me to co-create Network Magazine — a platform designed to connect leaders and bring people together through both a printed publication and meaningful in-person events.</p>
+        <p>Beyond business, I've been fortunate to serve alongside dedicated leaders and organizations committed to making a difference throughout our region. Through board service, philanthropic involvement, and community initiatives, I've seen firsthand what can happen when people unite around a shared purpose. The relationships built, causes supported, and lives impacted are among the most meaningful accomplishments of all. <strong>Success is measured not only by what we build, but by how we contribute to the communities that help make it possible.</strong></p>
+      </div>
+    </div>
+
+    <div class="community-sections">
+
+      <!-- Network Magazine -->
+      <div class="community-block reveal">
+        <h3 class="community-sub-title">Connecting Leaders. Creating Business.</h3>
+        <div class="netmag-feature">
+          <div class="netmag-logo-wrap">
+            <img src="Companies/Network Magazine/Marketing/Brand/network-magazine-logo.png" alt="Network Magazine" />
+            <div class="netmag-logo-divider"></div>
+          </div>
+          <div class="netmag-content">
+            <h3 class="netmag-title">Network Magazine</h3>
+            <p class="netmag-role">Co-Creator</p>
+            <p>A B2B publication built for the Lehigh Valley business community — connecting leaders, amplifying brands, and turning relationships into results. Network Magazine was created because I believed this region deserved a platform as ambitious as the people in it.</p>
+            <a href="https://mynetworkmag.com/" class="company-link" target="_blank" rel="noopener">Visit Network Magazine &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boards & Philanthropy -->
+      <div class="community-block reveal">
+        <h3 class="community-sub-title">Boards &amp; Philanthropy</h3>
+
+        <div class="board-cta">
+          <p class="board-cta-text">If you're interested in learning more about one or all of these organizations where I invest time, voice, and commitment — or would like an introduction — I'd be happy to connect you. Reach out directly.</p>
+          <a href="mailto:cm@chrismorganelli.com?subject=Community Organizations – Learn More" class="board-cta-btn">
+            <svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1.5"/><polyline points="1,3 8,9.5 15,3"/></svg>
+            Get In Touch
+          </a>
+        </div>
+
+        <div class="board-cards">
+
+          <div class="board-card">
+            <div class="board-logo-panel">
+              <a href="https://www.unitedwayglv.org/" target="_blank" rel="noopener">
+                <img src="Marketing/Boards &amp; Philanthropy Logos/UnitedWay.png" alt="United Way of the Lehigh Valley" />
+              </a>
+            </div>
+            <div class="board-card-body">
+              <div class="board-card-top">
+                <div>
+                  <p class="board-card-org">United Way of the Lehigh Valley</p>
+                  <p class="board-card-role">Cabinet Member</p>
+                </div>
+                <a href="https://www.unitedwayglv.org/" class="board-action-website" target="_blank" rel="noopener">Visit Website &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="board-card">
+            <div class="board-logo-panel">
+              <a href="https://www.unitedwayglv.org/tocqueville-society/" target="_blank" rel="noopener">
+                <img src="Marketing/Boards &amp; Philanthropy Logos/Tocqueville.png" alt="Tocqueville Society" />
+              </a>
+            </div>
+            <div class="board-card-body">
+              <div class="board-card-top">
+                <div>
+                  <p class="board-card-org">Tocqueville Society <span class="board-sub-note">— United Way LV</span></p>
+                  <p class="board-card-role">Cabinet Member</p>
+                </div>
+                <a href="https://www.unitedwayglv.org/tocqueville-society/" class="board-action-website" target="_blank" rel="noopener">Visit Website &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="board-card">
+            <div class="board-logo-panel">
+              <a href="https://www.desales.edu" target="_blank" rel="noopener">
+                <img src="Marketing/Boards &amp; Philanthropy Logos/DeSales.png" alt="DeSales University" />
+              </a>
+            </div>
+            <div class="board-card-body">
+              <div class="board-card-top">
+                <div>
+                  <p class="board-card-org">DeSales University</p>
+                  <p class="board-card-role">Computer Science Advisory Board Member</p>
+                </div>
+                <a href="https://www.desales.edu" class="board-action-website" target="_blank" rel="noopener">Visit Website &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="board-card">
+            <div class="board-logo-panel">
+              <a href="https://www.northampton.edu/foundation" target="_blank" rel="noopener">
+                <img src="Marketing/Boards &amp; Philanthropy Logos/Northampton_Community_College.png" alt="Northampton Community College" />
+              </a>
+            </div>
+            <div class="board-card-body">
+              <div class="board-card-top">
+                <div>
+                  <p class="board-card-org">Northampton Community College Community Foundation</p>
+                  <p class="board-card-role">Board Member</p>
+                </div>
+                <a href="https://www.northampton.edu/foundation" class="board-action-website" target="_blank" rel="noopener">Visit Website &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="board-card">
+            <div class="board-logo-panel">
+              <a href="https://www.icwcapital.org/" target="_blank" rel="noopener">
+                <img src="Marketing/Boards &amp; Philanthropy Logos/ICW Capital.png" alt="ICW Capital" />
+              </a>
+            </div>
+            <div class="board-card-body">
+              <div class="board-card-top">
+                <div>
+                  <p class="board-card-org">ICW&#174; Capital&#8482;</p>
+                  <p class="board-card-role">Board Member</p>
+                </div>
+                <a href="https://www.icwcapital.org/" class="board-action-website" target="_blank" rel="noopener">Visit Website &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Talks & Appearances -->
+      <div class="community-block reveal">
+        <h3 class="community-sub-title">Talks, Interviews &amp; Features</h3>
+        <div class="talks-grid stagger">
+          <div class="talk-card">
+            <a href="https://youtu.be/hW8XpkPym1g?si=1Yktiuz66Hp9fLkm" class="talk-video-thumb" target="_blank" rel="noopener">
+              <img src="https://img.youtube.com/vi/hW8XpkPym1g/hqdefault.jpg" alt="Interview" />
+              <div class="talk-play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+            </a>
+            <div class="talk-info">
+              <p class="talk-type">Interview</p>
+              <p class="talk-title">Featured Interview</p>
+            </div>
+          </div>
+          <div class="talk-card">
+            <a href="https://youtu.be/uOwaEBLhaXU?si=AK2FBdYF-mHfFinz" class="talk-video-thumb" target="_blank" rel="noopener">
+              <img src="https://img.youtube.com/vi/uOwaEBLhaXU/hqdefault.jpg" alt="Podcast Episode" />
+              <div class="talk-play-btn"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+            </a>
+            <div class="talk-info">
+              <p class="talk-type">Podcast</p>
+              <p class="talk-title">Featured Guest Appearance</p>
+            </div>
+          </div>
+          <div class="talk-card">
+            <div class="talk-placeholder">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="8" width="40" height="28" rx="2"/>
+                <line x1="16" y1="42" x2="32" y2="42"/>
+                <line x1="24" y1="36" x2="24" y2="42"/>
+              </svg>
+              <span class="talk-coming">Coming Soon</span>
+            </div>
+            <div class="talk-info">
+              <p class="talk-type">Speaking</p>
+              <p class="talk-title">Keynotes &amp; panel discussions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BUSINESS PORTFOLIO -->
+  <section id="business">
+    <div class="companies-deco"><span></span><span></span><span></span></div>
+    <div class="reveal" style="position:relative;z-index:1;">
+      <h2 class="section-title">Business Portfolio</h2>
+      <div class="rule"></div>
+    </div>
+
+    <div class="biz-philosophy reveal">
+      <span class="biz-quote-mark">&ldquo;</span>
+      <p class="biz-quote-text">Great things in business are never done by one person. They're done by a team of people.</p>
+      <p class="biz-quote-attr">Steve Jobs</p>
+      <div class="biz-philosophy-body">
+        <p>This quote perfectly reflects the foundation of this business portfolio. The success and growth of each company isn't driven by a single individual — it's the result of intentionally placing <strong>exceptional leaders in the right seats</strong> and empowering them to build, innovate, and lead. Every business thrives because of the people entrusted to run it, each bringing unique expertise, vision, and accountability.</p>
+        <p>I've been incredibly fortunate to have so many dedicated leaders and team members throughout my journey. Their commitment, talent, and belief in what we're building have been the driving force behind our collective success. <strong>When great people are aligned around a shared vision and purpose, growth becomes scalable, sustainable, and far greater than anything one person could accomplish alone.</strong></p>
+      </div>
+    </div>
+
+    <div class="biz-stack stagger">
+
+      <!-- MCIT -->
+      <div class="biz-card">
+        <div class="biz-logo-area">
+          <span class="biz-num">01</span>
+          <img src="Companies/MCIT/Marketing/Brand/mcit-v1.png" alt="MCIT" />
+        </div>
+        <div class="biz-info">
+          <p class="biz-role">Co-Founder &amp; CEO <span class="biz-since">Since 2014</span></p>
+          <h3 class="biz-name">MCIT</h3>
+          <p class="biz-desc">A full-spectrum technology company protecting and empowering businesses through cybersecurity, managed IT, AI enablement, access control, and surveillance solutions. 10+ years of protecting what matters most.</p>
+          <a href="https://mclvit.com/" class="biz-link" target="_blank" rel="noopener">Visit Website &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Network Magazine -->
+      <div class="biz-card">
+        <div class="biz-logo-area">
+          <span class="biz-num">02</span>
+          <img src="Companies/Network Magazine/Marketing/Brand/network-magazine-logo.png" alt="Network Magazine" class="network-logo" />
+        </div>
+        <div class="biz-info">
+          <p class="biz-role">Co-Creator <span class="biz-since">Since 2015</span></p>
+          <h3 class="biz-name">Network Magazine</h3>
+          <p class="biz-desc">A B2B publication connecting leaders, amplifying brands, and creating business opportunities throughout the Lehigh Valley region and beyond. Where relationships become results.</p>
+          <a href="https://mynetworkmag.com/" class="biz-link" target="_blank" rel="noopener">Visit Website &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Morganelli Properties -->
+      <div class="biz-card">
+        <div class="biz-logo-area">
+          <span class="biz-num">03</span>
+          <img src="Companies/Morganelli Properties/Marketing/Brand/MP_Logo_Final-Site-RedRoof.png" alt="Morganelli Properties" />
+        </div>
+        <div class="biz-info">
+          <p class="biz-role">Co-Owner <span class="biz-since">Since 2018</span></p>
+          <h3 class="biz-name">Morganelli Properties</h3>
+          <p class="biz-desc">A premier, 50+ member, residential and commercial real estate brokerage committed to delivering exceptional results for buyers, sellers, and investors across every market we serve.</p>
+          <a href="https://morganelliproperties.com/" class="biz-link" target="_blank" rel="noopener">Visit Website &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ValleyCrest -->
+      <div class="biz-card">
+        <div class="biz-logo-area">
+          <span class="biz-num">04</span>
+          <img src="Companies/ValleyCrest Property Management/ValleyCrest_logo_final_Final Full Color.png" alt="ValleyCrest Property Management" class="valleycrest-logo" />
+        </div>
+        <div class="biz-info">
+          <p class="biz-role">Co-Owner <span class="biz-since">Since 2024</span></p>
+          <h3 class="biz-name">ValleyCrest Property Management</h3>
+          <p class="biz-desc">Providing comprehensive residential and commercial property management services across 2,800+ units — ensuring properties are managed with precision, tenants are served, and owners can focus on growth.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONNECT -->
+  <section id="connect">
+    <div class="contact-dots"></div>
+    <div class="contact-dots-bl"></div>
+    <div class="contact-accent contact-accent-1"></div>
+    <div class="contact-accent contact-accent-2"></div>
+    <div class="contact-accent contact-accent-3"></div>
+    <div class="contact-accent contact-accent-4"></div>
+    <div class="contact-bracket-tl"></div>
+    <div class="contact-bracket-br"></div>
+
+    <div class="connect-inner reveal">
+      <div class="connect-left">
+        <h2 class="section-title">Let's Connect.</h2>
+        <div class="rule"></div>
+        <p class="contact-sub">Authentic relationships are the foundation of everything I build. Whether you're exploring a business opportunity, looking to collaborate, or simply want to connect — reach out.</p>
+        <div class="connect-direct">
+          <a href="mailto:cm@chrismorganelli.com" class="direct-item">
+            <div class="direct-icon">
+              <svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1.5"/><polyline points="1,3 8,9.5 15,3"/></svg>
+            </div>
+            <div>
+              <p class="direct-label">Email</p>
+              <p class="direct-value">cm@chrismorganelli.com</p>
+            </div>
+          </a>
+          <a href="tel:+16102486138" class="direct-item">
+            <div class="direct-icon">
+              <svg viewBox="0 0 16 16"><path d="M14.5 11.4v2a1.3 1.3 0 0 1-1.4 1.3 13.1 13.1 0 0 1-5.7-2A12.9 12.9 0 0 1 3.5 8.8a13.1 13.1 0 0 1-2-5.7A1.3 1.3 0 0 1 2.8 1.8h2a1.3 1.3 0 0 1 1.3 1.1 8.5 8.5 0 0 0 .46 1.86 1.3 1.3 0 0 1-.3 1.4L5.46 7a10.6 10.6 0 0 0 3.97 3.97l.77-.77a1.3 1.3 0 0 1 1.4-.3 8.5 8.5 0 0 0 1.86.46 1.3 1.3 0 0 1 1.1 1.3z"/></svg>
+            </div>
+            <div>
+              <p class="direct-label">Phone</p>
+              <p class="direct-value">(610) 248-6138</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="connect-right">
+        <p class="connect-social-label">Follow Along</p>
+        <div class="social-links-list">
+          <a href="https://www.linkedin.com/in/christophermorganelli" class="social-link" target="_blank" rel="noopener">
+            <div class="social-icon">
+              <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="5" y1="7" x2="5" y2="11"/><circle cx="5" cy="4.8" r="0.5" fill="var(--gold)" stroke="none"/><path d="M8 11V9c0-1.5 2-1.5 2 0v2"/><line x1="8" y1="7" x2="8" y2="11"/></svg>
+            </div>
+            <div class="social-info">
+              <p class="social-label">LinkedIn</p>
+              <p class="social-handle">christophermorganelli</p>
+            </div>
+            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="https://www.instagram.com/chrismorganelli/" class="social-link" target="_blank" rel="noopener">
+            <div class="social-icon">
+              <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.2" cy="4.8" r="0.6" fill="var(--gold)" stroke="none"/></svg>
+            </div>
+            <div class="social-info">
+              <p class="social-label">Instagram</p>
+              <p class="social-handle">@chrismorganelli</p>
+            </div>
+            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="https://www.facebook.com/christopher.morganelli" class="social-link" target="_blank" rel="noopener">
+            <div class="social-icon">
+              <svg viewBox="0 0 16 16"><path d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4.5v-4H6V9h1.5V7.5A2.5 2.5 0 0 1 10 5h1.5v2H10a.5.5 0 0 0-.5.5V9H12l-.5 2H9.5v4H13a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2z"/></svg>
+            </div>
+            <div class="social-info">
+              <p class="social-label">Facebook</p>
+              <p class="social-handle">christopher.morganelli</p>
+            </div>
+            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="Marketing/Brand/CM_Logo-White.png" alt="Chris Morganelli" />
+    <span>&copy; 2026 Chris Morganelli &nbsp;·&nbsp; All Rights Reserved</span>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/in/christophermorganelli" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="5" y1="7" x2="5" y2="11"/><circle cx="5" cy="5" r="0.5" fill="#fff" stroke="none"/><path d="M8 11V9.5c0-1.5 2-1.5 2 0V11"/><line x1="8" y1="7" x2="8" y2="11"/></svg>
+      </a>
+      <a href="mailto:cm@chrismorganelli.com" aria-label="Email">
+        <svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1.5"/><polyline points="1,3 8,9.5 15,3"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger').forEach(el => observer.observe(el));
+
+  </script>
+</body>
+</html>

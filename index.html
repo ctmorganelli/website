@@ -929,6 +929,19 @@
     footer img { height:28px; width:auto; opacity:0.35; filter:brightness(0) invert(1); }
     footer span { font-size:0.68rem; color:#3a3a3a; letter-spacing:0.12em; }
 
+    /* ── HAMBURGER BUTTON ── */
+    .nav-toggle {
+      display:none; background:none; border:none; cursor:pointer;
+      padding:0.4rem; z-index:201; flex-direction:column; gap:5px;
+    }
+    .nav-toggle span {
+      display:block; width:24px; height:2px; background:#fff; border-radius:2px;
+      transition:transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.2s;
+    }
+    .nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+    .nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
     /* ── RESPONSIVE ── */
     @media(max-width:1100px){
       nav { padding:1rem 2.5rem; }
@@ -938,37 +951,117 @@
       .hero-right { height:60vw; min-height:340px; }
       section { padding:5rem 2.5rem; }
       #connect { padding:5rem 2.5rem; }
-.about-layout { grid-template-columns:1fr; gap:3rem; }
+      .about-layout { grid-template-columns:1fr; gap:3rem; }
       .about-photo-wrap { max-width:280px; }
       .services-grid { grid-template-columns:repeat(2,1fr); }
-      .service-card-insurance { grid-template-columns:1fr; gap:2.5rem; }
-      .insurance-logo-wrap { align-items:flex-start; flex-direction:row; gap:2rem; align-items:center; }
-      .netmag-feature { grid-template-columns:160px 1fr; gap:2.5rem; }
+      .ins-body { grid-template-columns:180px 1fr; }
+      .netmag-feature { grid-template-columns:160px 1fr; }
       .talks-grid { grid-template-columns:repeat(2,1fr); }
-      .biz-card { grid-template-columns:1fr; }
-      .biz-logo-area { border-right:none; border-bottom:1px solid var(--border); min-height:100px; }
-      .biz-num { top:0.75rem; left:1rem; }
+      .biz-card { grid-template-columns:200px 1fr; }
       .connect-inner { grid-template-columns:1fr; gap:4rem; }
       footer { padding:1.5rem 2.5rem; }
-      .companies-deco { left:2.5rem; }
       .contact-bracket-tl { left:2.5rem; }
       .contact-bracket-br { right:2.5rem; }
     }
     @media(max-width:700px){
-      nav { padding:1rem 1.5rem; }
-      .nav-links { display:none; }
-      section { padding:4rem 1.5rem; }
-      #connect { padding:4rem 1.5rem; }
-.hero-stats { flex-wrap:wrap; gap:1.5rem; }
+      /* Nav & hamburger */
+      nav { padding:0.85rem 1.25rem; }
+      .nav-toggle { display:flex; }
+      .nav-links {
+        position:fixed; inset:0; z-index:198;
+        background:rgba(10,10,10,0.97);
+        flex-direction:column; align-items:center; justify-content:center;
+        gap:2.5rem; padding:2rem;
+        transform:translateX(100%);
+        transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+        display:flex !important;
+        list-style:none;
+      }
+      .nav-links.open { transform:translateX(0); }
+      .nav-links a {
+        font-size:1rem; letter-spacing:0.18em;
+        color:rgba(255,255,255,0.7);
+      }
+      .nav-links a:hover { color:#fff; }
+      .nav-cta {
+        padding:0.75rem 2rem !important;
+        font-size:0.78rem !important;
+        letter-spacing:0.18em !important;
+      }
+
+      /* Sections */
+      section { padding:3.5rem 1.25rem; }
+      #connect { padding:3.5rem 1.25rem; }
+
+      /* Hero */
+      .hero-left { padding:5.5rem 1.25rem 3rem; }
+      .hero-right { height:55vw; min-height:260px; }
+      .hero h1 { font-size:clamp(2.4rem,9vw,3.2rem); margin-bottom:1.25rem; }
+      .hero-sub { font-size:0.88rem; max-width:100%; }
       .hero-sectors { gap:0.4rem; }
+      .hero-sector { padding:0.4rem 0.7rem; }
+      .hero-cta { gap:0.75rem; }
+      .hero-cta .btn { padding:0.8rem 1.5rem; font-size:0.65rem; }
+
+      /* About */
+      .about-layout { grid-template-columns:1fr; gap:2.5rem; }
+      .about-photo-wrap { max-width:180px; }
+      .about-content p { font-size:0.92rem; }
+      .about-content .bold-open { font-size:0.95rem; }
+
+      /* MCIT hero */
+      .mcit-hero { grid-template-columns:1fr; }
+      .mcit-hero-brand { border-right:none; border-bottom:1px solid rgba(255,255,255,0.07); padding:2rem 1.25rem; }
+      .mcit-hero-content { padding:2rem 1.25rem; }
+
+      /* Services */
       .services-grid { grid-template-columns:1fr; }
-      .service-card-insurance { padding:2rem; }
-      .netmag-feature { grid-template-columns:1fr; gap:2rem; }
+
+      /* Insurance card */
+      .ins-header { padding:1.75rem 1.25rem; }
+      .ins-body { grid-template-columns:1fr; }
+      .ins-alignment { border-right:none; border-bottom:1px solid var(--border); padding:1.5rem 1.25rem; flex-direction:row; flex-wrap:wrap; gap:0.75rem; align-items:center; }
+      .ins-alignment img { max-width:120px; margin-top:0; }
+      .ins-copy { padding:1.5rem 1.25rem; }
+      .ins-copy p { font-size:0.8rem; }
+      .ins-pull { font-size:0.82rem; margin:1rem 0; }
+
+      /* Network Magazine */
+      .netmag-feature { grid-template-columns:1fr; }
+      .netmag-logo-wrap { padding:1.75rem 1.25rem; border-right:none; border-bottom:1px solid rgba(212,184,122,0.2); }
+      .netmag-content { padding:1.75rem 1.25rem; }
+
+      /* Board cards */
+      .board-card { grid-template-columns:1fr; }
+      .board-logo-panel { min-height:80px; border-right:none; border-bottom:1px solid var(--border); }
+      .board-card-top { flex-direction:column; align-items:flex-start; gap:0.4rem; }
+      .board-card-body { padding:1rem 1.25rem; }
+      .board-card-actions { padding-left:0; }
+
+      /* Talks/Community */
       .talks-grid { grid-template-columns:1fr; }
-      .connect-inner { gap:3rem; }
-      footer { flex-direction:column; gap:0.5rem; padding:1.5rem; text-align:center; }
-      .companies-deco { left:1.5rem; }
+
+      /* Business */
+      .biz-card { grid-template-columns:1fr; }
+      .biz-logo-area { border-right:none; border-bottom:1px solid var(--border); min-height:90px; padding:1.25rem; }
+      .biz-num { top:0.6rem; left:0.75rem; }
+      .section-title { font-size:clamp(2rem,8vw,2.8rem); }
+      .biz-philosophy-body { text-align:left; }
+      .comm-philosophy-body { text-align:left; }
+
+      /* Connect */
+      .connect-inner { gap:2.5rem; }
       .contact-bracket-tl, .contact-bracket-br { display:none; }
+
+      /* Footer */
+      footer { flex-direction:column; gap:0.75rem; padding:1.5rem 1.25rem; text-align:center; }
+      footer::before { left:1.25rem; right:1.25rem; }
+    }
+
+    @media(max-width:400px){
+      .hero h1 { font-size:2.2rem; }
+      .ins-alignment { flex-direction:column; align-items:flex-start; }
+      .hero-sector .sector-name { font-size:0.52rem; }
     }
   </style>
 </head>
@@ -979,7 +1072,10 @@
     <a href="#" class="nav-logo">
       <img src="Marketing/Brand/CM_Logo-Black.png" alt="Chris Morganelli" />
     </a>
-    <ul class="nav-links">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#community">Community</a></li>
@@ -1707,6 +1803,23 @@
     // Nav scroll effect
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    // Hamburger menu
+    const navToggle = document.getElementById('navToggle');
+    const navLinks  = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    // Close on link click
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
 
     // Scroll reveal
     const observer = new IntersectionObserver((entries) => {

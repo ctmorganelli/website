@@ -77,6 +77,7 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;800;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -331,9 +332,16 @@
     .pillar:hover { border-left-color:var(--gold); background:var(--gold-pale); transform:translateX(5px); }
     .pillar-title { font-size:0.68rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--charcoal); margin-bottom:0.2rem; }
     .pillar-text { font-size:0.82rem; color:var(--muted); }
-    .about-content p { font-size:1.05rem; line-height:2; color:#3d3d3d; margin-bottom:1.6rem; }
+    .about-content p { font-size:1.05rem; line-height:1.7; color:#3d3d3d; margin-bottom:1.6rem; }
     .about-content p:last-child { margin-bottom:0; }
     .about-content .bold-open { font-family:'Raleway',sans-serif; font-size:1.1rem; font-weight:700; color:var(--charcoal); line-height:1.8; border-left:3px solid var(--gold); padding-left:1.25rem; }
+    .bio-signature {
+      display:block;
+      margin-top:2rem;
+      width:80px;
+      height:auto;
+      opacity:0.85;
+    }
 
     /* ── ICONS (shared) ── */
     .pillar-icon { margin-bottom:0.5rem; }
@@ -951,8 +959,105 @@
     .contact-bracket-br{bottom:2.5rem;right:5rem;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);}
 
     .connect-inner {
-      display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:start;
-      position:relative; z-index:1; max-width:1060px;
+      display:flex; flex-direction:column; gap:0; align-items:flex-start;
+      position:relative; z-index:1; max-width:720px;
+    }
+
+    /* Contact Form */
+    .contact-form-wrap {
+      position:relative; z-index:1;
+      max-width:1060px; width:100%;
+      margin-top:5rem;
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding-top:4rem;
+    }
+    .contact-form-wrap h3 {
+      font-family:'Raleway',sans-serif;
+      font-size:0.65rem; font-weight:700; letter-spacing:0.26em; text-transform:uppercase;
+      color:var(--gold-light); margin-bottom:2rem;
+    }
+    .contact-form {
+      display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;
+    }
+    .contact-form .field-full { grid-column:1 / -1; }
+    .form-field {
+      display:flex; flex-direction:column; gap:0.45rem;
+    }
+    .form-field label {
+      font-size:0.6rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase;
+      color:rgba(255,255,255,0.35);
+    }
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.1);
+      color:#fff;
+      font-family:'Inter',sans-serif; font-size:0.92rem;
+      padding:0.85rem 1rem;
+      outline:none;
+      transition:border-color 0.2s, background 0.2s;
+      border-radius:0;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color:rgba(255,255,255,0.2); }
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+      border-color:rgba(26,122,110,0.6);
+      background:rgba(26,122,110,0.05);
+    }
+    .form-field textarea { resize:vertical; min-height:110px; }
+    .form-field select option { background:#111; color:#fff; }
+    .form-submit-row { grid-column:1 / -1; display:flex; align-items:center; gap:1.5rem; margin-top:0.5rem; }
+    .form-submit-btn {
+      font-family:'Raleway',sans-serif;
+      font-size:0.7rem; font-weight:800; letter-spacing:0.22em; text-transform:uppercase;
+      background:var(--gold); color:#fff;
+      border:none; cursor:pointer;
+      padding:1rem 2.5rem;
+      transition:background 0.2s, opacity 0.2s;
+    }
+    .form-submit-btn:hover { background:var(--gold-light); }
+    .form-status { font-size:0.82rem; color:rgba(255,255,255,0.4); display:none; }
+    .form-status.visible { display:block; }
+    .recaptcha-row { grid-column:1 / -1; margin-top:0.25rem; }
+    /* Social bottom */
+    .connect-social-bottom {
+      position:relative; z-index:1;
+      max-width:1060px; width:100%;
+      margin-top:4rem;
+      border-top:1px solid rgba(255,255,255,0.06);
+      padding-top:3rem;
+      display:flex; flex-direction:column; align-items:center; gap:1.5rem;
+    }
+    .connect-social-bottom .connect-social-label {
+      font-size:0.58rem; font-weight:700; letter-spacing:0.32em; text-transform:uppercase;
+      color:rgba(255,255,255,0.28); text-align:center;
+    }
+    .social-icons-row {
+      display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap;
+    }
+    .social-icon-link {
+      display:flex; align-items:center; gap:0.65rem;
+      padding:0.7rem 1.25rem;
+      border:1px solid rgba(255,255,255,0.08);
+      text-decoration:none; color:rgba(255,255,255,0.6);
+      font-family:'Raleway',sans-serif; font-size:0.68rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      transition:border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .social-icon-link:hover { border-color:rgba(26,122,110,0.5); color:#fff; background:rgba(26,122,110,0.06); }
+    .social-icon-link svg { width:14px; height:14px; stroke:var(--gold); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+    @media(max-width:700px) {
+      .contact-form { grid-template-columns:1fr; }
+      .contact-form .field-full { grid-column:1; }
+      .recaptcha-row { grid-column:1; }
+      .form-submit-row { grid-column:1; flex-direction:column; align-items:flex-start; }
+      .social-icons-row { flex-direction:column; align-items:stretch; }
+      .social-icon-link { justify-content:center; }
     }
     #connect .label { color:var(--gold-light); }
     #connect .label::before { background:var(--gold-light); }
@@ -1251,6 +1356,7 @@
         <p>
           I have also expanded and diversified into real estate through Morganelli Properties and ValleyCrest Property Management because I believe in building across multiple pillars, not just one. At the end of the day, what I am working toward is a lasting legacy: a reputation built on authenticity, meaningful relationships, protecting what matters most, and continuously pursuing what comes next. Whether that impact is felt across the street or across the country, the mission remains the same — create value, build trust, and leave things better than you found them.
         </p>
+        <img class="bio-signature" src="Marketing/Brand/CM_Logo-Black.png" alt="Chris Morganelli signature" />
       </div>
     </div>
   </section>
@@ -1832,42 +1938,78 @@
         </div>
       </div>
 
-      <div class="connect-right">
-        <p class="connect-social-label">Follow Along</p>
-        <div class="social-links-list">
-          <a href="https://www.linkedin.com/in/christophermorganelli" class="social-link" target="_blank" rel="noopener">
-            <div class="social-icon">
-              <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="5" y1="7" x2="5" y2="11"/><circle cx="5" cy="4.8" r="0.5" fill="var(--gold)" stroke="none"/><path d="M8 11V9c0-1.5 2-1.5 2 0v2"/><line x1="8" y1="7" x2="8" y2="11"/></svg>
-            </div>
-            <div class="social-info">
-              <p class="social-label">LinkedIn</p>
-              <p class="social-handle">christophermorganelli</p>
-            </div>
-            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </a>
-          <a href="https://www.instagram.com/chrismorganelli/" class="social-link" target="_blank" rel="noopener">
-            <div class="social-icon">
-              <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.2" cy="4.8" r="0.6" fill="var(--gold)" stroke="none"/></svg>
-            </div>
-            <div class="social-info">
-              <p class="social-label">Instagram</p>
-              <p class="social-handle">@chrismorganelli</p>
-            </div>
-            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </a>
-          <a href="https://www.facebook.com/christopher.morganelli" class="social-link" target="_blank" rel="noopener">
-            <div class="social-icon">
-              <svg viewBox="0 0 16 16"><path d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4.5v-4H6V9h1.5V7.5A2.5 2.5 0 0 1 10 5h1.5v2H10a.5.5 0 0 0-.5.5V9H12l-.5 2H9.5v4H13a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2z"/></svg>
-            </div>
-            <div class="social-info">
-              <p class="social-label">Facebook</p>
-              <p class="social-handle">christopher.morganelli</p>
-            </div>
-            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </a>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form-wrap reveal">
+      <h3>Send a Message</h3>
+      <!-- ACTION: replace YOUR_FORM_ID below with your Formspree form ID (formspree.io) -->
+      <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+        <!-- Honeypot anti-spam -->
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+        <div class="form-field">
+          <label for="cf-name">Name</label>
+          <input type="text" id="cf-name" name="name" placeholder="Your full name" required />
         </div>
+
+        <div class="form-field">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" placeholder="your@email.com" required />
+        </div>
+
+        <div class="form-field">
+          <label for="cf-phone">Phone</label>
+          <input type="tel" id="cf-phone" name="phone" placeholder="(000) 000-0000" />
+        </div>
+
+        <div class="form-field">
+          <label for="cf-company">Company</label>
+          <input type="text" id="cf-company" name="company" placeholder="Your company name" />
+        </div>
+
+        <div class="form-field field-full">
+          <label for="cf-role">Role / Title</label>
+          <input type="text" id="cf-role" name="role" placeholder="Your role or title" />
+        </div>
+
+        <div class="form-field field-full">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" placeholder="Share a bit more about what's on your mind…"></textarea>
+        </div>
+
+        <!-- reCAPTCHA: replace YOUR_SITE_KEY with your key from g.co/recaptcha -->
+        <div class="recaptcha-row">
+          <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY" data-theme="dark"></div>
+        </div>
+
+        <div class="form-submit-row">
+          <button type="submit" class="form-submit-btn">Send Message</button>
+          <span class="form-status" id="formStatus"></span>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Social — centered bottom -->
+    <div class="connect-social-bottom reveal">
+      <p class="connect-social-label">Follow Along</p>
+      <div class="social-icons-row">
+        <a href="https://www.linkedin.com/in/christophermorganelli" class="social-icon-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="5" y1="7" x2="5" y2="11"/><circle cx="5" cy="4.8" r="0.5" fill="var(--gold)" stroke="none"/><path d="M8 11V9c0-1.5 2-1.5 2 0v2"/><line x1="8" y1="7" x2="8" y2="11"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://www.instagram.com/chrismorganelli/" class="social-icon-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.2" cy="4.8" r="0.6" fill="var(--gold)" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a href="https://www.facebook.com/christopher.morganelli" class="social-icon-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16"><path d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4.5v-4H6V9h1.5V7.5A2.5 2.5 0 0 1 10 5h1.5v2H10a.5.5 0 0 0-.5.5V9H12l-.5 2H9.5v4H13a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2z"/></svg>
+          Facebook
+        </a>
       </div>
     </div>
+
   </section>
 
   <!-- FOOTER -->
@@ -1904,6 +2046,49 @@
         document.body.style.overflow = '';
       });
     });
+
+    // Contact form — submits to Formspree, which emails cm@chrismorganelli.com
+    const contactForm = document.getElementById('contactForm');
+    const formStatus  = document.getElementById('formStatus');
+    if (contactForm) {
+      contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(contactForm));
+        if (!data.name || !data.email) {
+          formStatus.textContent = 'Please provide your name and email.';
+          formStatus.style.color = 'rgba(255,100,100,0.8)';
+          formStatus.classList.add('visible');
+          return;
+        }
+        const submitBtn = contactForm.querySelector('.form-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+        try {
+          const res = await fetch(contactForm.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: new FormData(contactForm)
+          });
+          if (res.ok) {
+            formStatus.textContent = 'Message sent — thank you.';
+            formStatus.style.color = 'rgba(61,168,152,0.9)';
+            formStatus.classList.add('visible');
+            contactForm.reset();
+            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+          } else {
+            formStatus.textContent = 'Something went wrong. Please try again.';
+            formStatus.style.color = 'rgba(255,100,100,0.8)';
+            formStatus.classList.add('visible');
+          }
+        } catch {
+          formStatus.textContent = 'Network error. Please try again.';
+          formStatus.style.color = 'rgba(255,100,100,0.8)';
+          formStatus.classList.add('visible');
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      });
+    }
 
     // Scroll reveal
     const observer = new IntersectionObserver((entries) => {

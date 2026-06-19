@@ -77,7 +77,6 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;800;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -959,8 +958,8 @@
     .contact-bracket-br{bottom:2.5rem;right:5rem;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);}
 
     .connect-inner {
-      display:flex; flex-direction:column; gap:0; align-items:flex-start;
-      position:relative; z-index:1; max-width:720px;
+      display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:start;
+      position:relative; z-index:1; max-width:1060px;
     }
 
     /* Contact Form */
@@ -1938,77 +1937,43 @@
         </div>
       </div>
 
-    </div>
-
-    <!-- Contact Form -->
-    <div class="contact-form-wrap reveal">
-      <h3>Send a Message</h3>
-      <!-- ACTION: replace YOUR_FORM_ID below with your Formspree form ID (formspree.io) -->
-      <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
-        <!-- Honeypot anti-spam -->
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
-
-        <div class="form-field">
-          <label for="cf-name">Name</label>
-          <input type="text" id="cf-name" name="name" placeholder="Your full name" required />
+      <div class="connect-right">
+        <p class="connect-social-label">Follow Along</p>
+        <div class="social-links-list">
+          <a href="https://www.linkedin.com/in/christophermorganelli" class="social-link" target="_blank" rel="noopener">
+            <div class="social-icon">
+              <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="5" y1="7" x2="5" y2="11"/><circle cx="5" cy="4.8" r="0.5" fill="var(--gold)" stroke="none"/><path d="M8 11V9c0-1.5 2-1.5 2 0v2"/><line x1="8" y1="7" x2="8" y2="11"/></svg>
+            </div>
+            <div class="social-info">
+              <p class="social-label">LinkedIn</p>
+              <p class="social-handle">christophermorganelli</p>
+            </div>
+            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="https://www.instagram.com/chrismorganelli/" class="social-link" target="_blank" rel="noopener">
+            <div class="social-icon">
+              <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.2" cy="4.8" r="0.6" fill="var(--gold)" stroke="none"/></svg>
+            </div>
+            <div class="social-info">
+              <p class="social-label">Instagram</p>
+              <p class="social-handle">@chrismorganelli</p>
+            </div>
+            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a href="https://www.facebook.com/christopher.morganelli" class="social-link" target="_blank" rel="noopener">
+            <div class="social-icon">
+              <svg viewBox="0 0 16 16"><path d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4.5v-4H6V9h1.5V7.5A2.5 2.5 0 0 1 10 5h1.5v2H10a.5.5 0 0 0-.5.5V9H12l-.5 2H9.5v4H13a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2z"/></svg>
+            </div>
+            <div class="social-info">
+              <p class="social-label">Facebook</p>
+              <p class="social-handle">christopher.morganelli</p>
+            </div>
+            <svg class="social-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
         </div>
-
-        <div class="form-field">
-          <label for="cf-email">Email</label>
-          <input type="email" id="cf-email" name="email" placeholder="your@email.com" required />
-        </div>
-
-        <div class="form-field">
-          <label for="cf-phone">Phone</label>
-          <input type="tel" id="cf-phone" name="phone" placeholder="(000) 000-0000" />
-        </div>
-
-        <div class="form-field">
-          <label for="cf-company">Company</label>
-          <input type="text" id="cf-company" name="company" placeholder="Your company name" />
-        </div>
-
-        <div class="form-field field-full">
-          <label for="cf-role">Role / Title</label>
-          <input type="text" id="cf-role" name="role" placeholder="Your role or title" />
-        </div>
-
-        <div class="form-field field-full">
-          <label for="cf-message">Message</label>
-          <textarea id="cf-message" name="message" placeholder="Share a bit more about what's on your mind…"></textarea>
-        </div>
-
-        <!-- reCAPTCHA: replace YOUR_SITE_KEY with your key from g.co/recaptcha -->
-        <div class="recaptcha-row">
-          <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY" data-theme="dark"></div>
-        </div>
-
-        <div class="form-submit-row">
-          <button type="submit" class="form-submit-btn">Send Message</button>
-          <span class="form-status" id="formStatus"></span>
-        </div>
-
-      </form>
-    </div>
-
-    <!-- Social — centered bottom -->
-    <div class="connect-social-bottom reveal">
-      <p class="connect-social-label">Follow Along</p>
-      <div class="social-icons-row">
-        <a href="https://www.linkedin.com/in/christophermorganelli" class="social-icon-link" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="5" y1="7" x2="5" y2="11"/><circle cx="5" cy="4.8" r="0.5" fill="var(--gold)" stroke="none"/><path d="M8 11V9c0-1.5 2-1.5 2 0v2"/><line x1="8" y1="7" x2="8" y2="11"/></svg>
-          LinkedIn
-        </a>
-        <a href="https://www.instagram.com/chrismorganelli/" class="social-icon-link" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.2" cy="4.8" r="0.6" fill="var(--gold)" stroke="none"/></svg>
-          Instagram
-        </a>
-        <a href="https://www.facebook.com/christopher.morganelli" class="social-icon-link" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16"><path d="M13 1H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4.5v-4H6V9h1.5V7.5A2.5 2.5 0 0 1 10 5h1.5v2H10a.5.5 0 0 0-.5.5V9H12l-.5 2H9.5v4H13a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2z"/></svg>
-          Facebook
-        </a>
       </div>
     </div>
+
 
   </section>
 
